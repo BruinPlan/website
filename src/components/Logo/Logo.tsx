@@ -3,7 +3,7 @@ import './Logo.css'
 function Logo() {
     return (
         <>
-            <h1>logo</h1>
+            <h1 className="logo">logo</h1>
         </>
     )
 }

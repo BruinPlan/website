@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import './App.css'
-
-import Logo from '../Logo/Logo'
-import Navbar from '../Navbar/Navbar'
+import Navbar from './components/Navbar/Navbar'
+import Schedule from './components/Schedule/Schedule'
 
 function App() {
 
   return (
     <>
       <Navbar />
+      <Schedule />
     </>
   )
 }

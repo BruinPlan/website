@@ -1,0 +1,14 @@
+.schedule {
+    width: 70%;
+    margin: 7.5rem auto;
+    border: 1px solid black;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.schedule-header {
+    text-align: center;
+    display: block;
+    margin: 0;
+    padding: 0.5rem;
+}
