@@ -1,0 +1,13 @@
+.column-container {
+    margin: 0.5rem;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+}
+
+.column-title {
+    padding: 8px;
+}
+
+.class-list {
+    padding: 8px;
+}
