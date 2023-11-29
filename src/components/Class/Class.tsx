@@ -10,19 +10,17 @@ type ClassType = {
 
 function Class(props: ClassType) {
     return (
-        <>
-            <Draggable draggableId={props.class.id} index={props.index}>
-                {(provided) => (
-                    <div className="class-container"
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                    >
-                        { props.class.content }
-                    </div>
-                )}
-            </Draggable>
-        </>
+        <Draggable draggableId={props.class.id} index={props.index}>
+            {(provided, snapshot) => (
+                <div className={ "class-container " + (snapshot.isDragging ? "isDragging" : "") }
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                >
+                    { props.class.content }
+                </div>
+            )}
+        </Draggable>
     )
 }
 
