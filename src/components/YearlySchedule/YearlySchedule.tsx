@@ -1,38 +1,101 @@
-import React from 'react';
+import { useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { ScheduleDataType, scheduleData } from './YearlyScheduleData';
+import { scheduleData } from './YearlyScheduleData';
 import Column from '../Column/Column';
 import './YearlySchedule.css'
 
 function YearlySchedule() {
-    const [schedule, setSchedule] = React.useState(scheduleData);
+    const [schedule, setSchedule] = useState(scheduleData);
 
-    return (
-        <>
-            <div className="yearly-schedule">
-                { getSchedule(schedule) }
-            </div>
-        </>
-    )
-}
+    // updates columns once a class has been dragged
+    const onDragEnd = (result: any) => {
+        const { destination, source, draggableId } = result
 
-function getSchedule(schedule: ScheduleDataType) {
-    return (
-        <DragDropContext onDragEnd={onDragEnd} >
-            { 
-                schedule.columnOrder.map(columnId => {
-                    const column = schedule.columns[columnId];
-                    const classes = column.classIds.map(classId => schedule.classes[classId]);
+        if (!destination) {
+            return
+        }
 
-                    return <Column key={column.id} column={column} classes={classes} />
-                })
+        if (destination.droppableId === source.droppableId && 
+            destination.index === source.index) {
+                return
+        }
+
+        /* create new class ID array with new ordering after drag and drop*/
+
+        // get source and destination quarters
+        const start = schedule.columns[source.droppableId]
+        const finish = schedule.columns[destination.droppableId]
+
+        // if class is dragged within the same quarter
+        if (start === finish) {
+            const newClassIds = Array.from(start.classIds)
+            newClassIds.splice(source.index, 1)
+            newClassIds.splice(destination.index, 0, draggableId)
+
+            const newColumn = {
+                ...start,
+                classIds: newClassIds
             }
-        </DragDropContext>
-    )
-}
 
-function onDragEnd(result: string) {
-    
+            const newSchedule = {
+                ...schedule,
+                columns: {
+                    ...schedule.columns,
+                    [newColumn.id]: newColumn,
+                }
+            }
+
+            setSchedule(newSchedule)
+            return
+        }
+        
+        // class is dragged to different quarter
+        const startClassIds = Array.from(start.classIds)
+        startClassIds.splice(source.index, 1)
+        const newStart = {
+            ...start,
+            classIds: startClassIds
+        }
+
+        const finishClassIds = Array.from(finish.classIds)
+        finishClassIds.splice(destination.index, 0, draggableId)
+        const newFinish = {
+            ...finish,
+            classIds: finishClassIds
+        }
+
+        const newSchedule = {
+            ...schedule,
+            columns: {
+                ...schedule.columns,
+                [newStart.id]: newStart,
+                [newFinish.id]: newFinish
+            }
+        }
+
+        console.log(start)
+        console.log(finish)
+        console.log(newSchedule)
+
+        setSchedule(newSchedule)
+    }
+
+    return (
+        <div className="yearly-schedule">
+            <DragDropContext onDragEnd={onDragEnd} >
+                <div className="quarters-container">
+                    { 
+                        schedule.columnOrder.map(columnId => {
+                            const column = schedule.columns[columnId];
+                            const classes = column.classIds.map(classId => schedule.classes[classId]);
+
+                            return <Column key={column.id} column={column} classes={classes} />
+                        })
+                    }
+                </div>
+            </DragDropContext>
+        </div>
+    )
 }
 
 export default YearlySchedule

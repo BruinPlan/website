@@ -67,13 +67,13 @@ function YearTabs() {
         <YearlySchedule />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <YearlySchedule />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <YearlySchedule />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Four
+        <YearlySchedule />
       </TabPanel>
     </Box>
   );

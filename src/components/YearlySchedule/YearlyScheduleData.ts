@@ -9,7 +9,7 @@ export type ColumnDataType = {
     classIds: string[];
 };
 
-export type ScheduleDataType = {
+type ScheduleDataType = {
     classes: Record<string, ClassDataType>;
     columns: Record<string, ColumnDataType>;
     columnOrder: string[];
@@ -17,17 +17,32 @@ export type ScheduleDataType = {
 
 export const scheduleData: ScheduleDataType = {
     classes: {
-        'class-1': { id: 'class-1', content: 'First class' },
-        'class-2': { id: 'class-2', content: 'Second class' },
-        'class-3': { id: 'class-3', content: 'Third class' },
-        'class-4': { id: 'class-4', content: 'Fourth class' }
+        'fall-1': { id: 'fall-1', content: 'Fall 1' },
+        'fall-2': { id: 'fall-2', content: 'Fall 2' },
+        'fall-3': { id: 'fall-3', content: 'Fall 3' },
+        'fall-4': { id: 'fall-4', content: 'Fall 4' }
     },
     columns: {
         'fall': {
             id: 'fall',
             title: 'Fall',
-            classIds: ['class-1', 'class-2', 'class-3', 'class-4']
+            classIds: ['fall-1', 'fall-2', 'fall-3', 'fall-4']
+        },
+        'winter': {
+            id: 'winter',
+            title: 'Winter',
+            classIds: []
+        },
+        'spring': {
+            id: 'spring',
+            title: 'Spring',
+            classIds: []
+        },
+        'summer': {
+            id: 'summer',
+            title: 'Summer',
+            classIds: []
         }
     },
-    columnOrder: ['fall']
+    columnOrder: ['fall', 'winter', 'spring', 'summer']
 };
