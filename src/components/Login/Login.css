@@ -1,4 +1,4 @@
-.login {
+.login, .logout {
     background-color: var(--peach);
     border-radius: 50em;
     display: flex;
@@ -8,7 +8,7 @@
     transition: 0.25s ease;
 }
 
-.login:hover {
+.login:hover, .logout:hover {
     cursor: pointer;
     transform: scale(1.1);
 }

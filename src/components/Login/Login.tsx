@@ -1,27 +1,59 @@
-import { useGoogleLogin } from "@react-oauth/google"
-import axios from "axios"
-import './Login.css'
+import { useGoogleLogin } from "@react-oauth/google";
+import { googleLogout } from "@react-oauth/google";
+import React, { useState } from "react";
+import "./Login.css";
 
 function Login() {
+    const [isLogged, setIsLogged] = useState(false);
     const login = useGoogleLogin({
         onSuccess: async (response) => {
             try {
-                const res = await axios.get(
-                    "https://www.googleapis.com/oauth2/v3/userinfo", 
+                const res = await fetch(
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
                     {
                         headers: {
                             Authorization: `Bearer ${response.access_token}`,
                         },
                     }
                 );
-                console.log(res.data);
+                const data = await res.json();
+                console.log(data);
+                setIsLogged(true);
             } catch (err) {
                 console.log(err);
             }
-        }
+        },
     });
 
-    return <button className="login" onClick={() => {login()}}>Login</button>
+    const logout = () => {
+        googleLogout();
+        setIsLogged(false);
+        console.log("Logged out");
+    };
+
+    return (
+        <div>
+            {isLogged ? (
+                <button
+                    className="logout"
+                    onClick={() => {
+                        logout();
+                    }}
+                >
+                    Logout
+                </button>
+            ) : (
+                <button
+                    className="login"
+                    onClick={() => {
+                        login();
+                    }}
+                >
+                    Login
+                </button>
+            )}
+        </div>
+    );
 }
 
-export default Login; 
+export default Login;

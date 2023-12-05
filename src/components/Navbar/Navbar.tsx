@@ -1,5 +1,6 @@
-import Logo from '../Logo/Logo'
-import './Navbar.css'
+import Logo from "../Logo/Logo";
+import Login from "../Login/Login";
+import "./Navbar.css";
 
 function Navbar() {
     return (
@@ -7,14 +8,14 @@ function Navbar() {
             <div className="nav-container">
                 <Logo />
                 <div className="nav-panel">
-                    <a className="notes" href="#">Notes</a>
-                    <div className="login">
-                        <a className="login-btn" href="#">Login</a>
-                    </div>
+                    <a className="notes" href="#">
+                        Notes
+                    </a>
+                    <Login />
                 </div>
             </div>
         </nav>
-    )
+    );
 }
 
 export default Navbar;
