@@ -32,7 +32,7 @@ function Login() {
     };
 
     return (
-        <div>
+        <>
             {isLogged ? (
                 <button
                     className="logout"
@@ -52,7 +52,7 @@ function Login() {
                     Login
                 </button>
             )}
-        </div>
+        </>
     );
 }
 
