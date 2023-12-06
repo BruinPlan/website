@@ -12,24 +12,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.authRouter = exports.apiRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const db_js_1 = require("./db.js");
-const router = express_1.default.Router();
+const passport_1 = __importDefault(require("passport"));
+require("./passport.js");
+const apiRouter = express_1.default.Router();
+exports.apiRouter = apiRouter;
+const authRouter = express_1.default.Router();
+exports.authRouter = authRouter;
 // get all users
-router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+apiRouter.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield (0, db_js_1.getUsers)();
     res.send(users);
 }));
 // get user by id
-router.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+apiRouter.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const user = yield (0, db_js_1.getUser)(id);
     res.send(user);
 }));
 // add user
-router.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+apiRouter.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { first_name, last_name, year_id, major_id } = req.body;
     const user = yield (0, db_js_1.addUser)(first_name, last_name, year_id, major_id);
     res.status(201).send(user);
 }));
-exports.default = router;
+// check if user logged in
+const isLoggedIn = (req, res, next) => {
+    if (req.user) {
+        next();
+    }
+    else {
+        res.sendStatus(401);
+    }
+};
+// authenticate user
+authRouter.get("/google", passport_1.default.authenticate('google', { scope: ['profile', 'email'] }));
+// callback route for google to redirect to
+authRouter.get("/google/callback", passport_1.default.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+});
+// logout user
+authRouter.get("/logout", (req, res) => {
+    req.session = null;
+    req.logout();
+    res.redirect('/');
+});

@@ -1,10 +1,13 @@
 import express from 'express'
-import apiRouter from './router.js'
+import { apiRouter, authRouter } from './router.js'
 import path from 'path'
-
+import { access } from 'fs'
+import cookieSession from 'cookie-session'
+import passport from 'passport'
+import './passport.js'
 
 export class Server {
-  constructor(app) {
+  constructor() {
     this.app = express()
     this.app.use(express.json())
 
@@ -15,8 +18,18 @@ export class Server {
       next()
     })
 
+    this.app.use(cookieSession({
+      name: 'session',
+      keys: ['key1', 'key2']
+    }))
+
+    // Passport middleware
+    this.app.use(passport.initialize())
+    this.app.use(passport.session())
+
     // api
-    this.app.use('/api', apiRouter);
+    this.app.use('/api', apiRouter)
+    this.app.use('/auth', authRouter)
 
     // handle errors
     this.app.use((err, req, res, next) => {

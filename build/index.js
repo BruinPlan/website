@@ -4,11 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_js_1 = require("./app/server.js");
-const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const app = (0, express_1.default)();
 const domain = process.env.DB_HOST;
 const port = process.env.PORT;
-const server = new server_js_1.Server(app);
+const server = new server_js_1.Server();
 server.start(domain, port);

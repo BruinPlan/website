@@ -5,10 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Server = void 0;
 const express_1 = __importDefault(require("express"));
-const router_js_1 = __importDefault(require("./router.js"));
+const router_js_1 = require("./router.js");
 const path_1 = __importDefault(require("path"));
+const fs_1 = require("fs");
+const cookie_session_1 = __importDefault(require("cookie-session"));
+const passport_1 = __importDefault(require("passport"));
+require("./passport.js");
 class Server {
-    constructor(app) {
+    constructor() {
         this.app = (0, express_1.default)();
         this.app.use(express_1.default.json());
         // enable cors
@@ -17,8 +21,16 @@ class Server {
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
         });
+        this.app.use((0, cookie_session_1.default)({
+            name: 'session',
+            keys: ['key1', 'key2']
+        }));
+        // Passport middleware
+        this.app.use(passport_1.default.initialize());
+        this.app.use(passport_1.default.session());
         // api
-        this.app.use('/api', router_js_1.default);
+        this.app.use('/api', router_js_1.apiRouter);
+        this.app.use('/auth', router_js_1.authRouter);
         // handle errors
         this.app.use((err, req, res, next) => {
             console.log(err.stack);
