@@ -1,24 +1,24 @@
 import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'
-import { ClassDataType } from '../YearlySchedule/YearlyScheduleData'
-import './Class.css'
+import { CourseDataType } from '../YearlySchedule/YearlyScheduleData'
+import './Course.css'
 
 type ClassType = {
     key: string,
-    class: ClassDataType,
+    course: CourseDataType,
     index: number
 }
 
 function Class(props: ClassType) {
     return (
-        <Draggable draggableId={props.class.id} index={props.index}>
+        <Draggable draggableId={props.course.id} index={props.index}>
             {(provided, snapshot) => (
-                <div className={ "class-container " + (snapshot.isDragging ? "isDragging" : "") }
+                <div className={ "course-container " + (snapshot.isDragging ? "isDragging" : "") }
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     ref={provided.innerRef}
                 >
-                    { props.class.content }
+                    { props.course.title }
                 </div>
             )}
         </Draggable>

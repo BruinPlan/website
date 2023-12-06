@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addUser = exports.getUser = exports.getUsers = void 0;
+exports.getCourses = exports.addUser = exports.getUser = exports.getUsers = void 0;
 const mysql2_1 = __importDefault(require("mysql2"));
 const config_js_1 = __importDefault(require("./config.js"));
 const pool = mysql2_1.default.createPool(config_js_1.default.db).promise();
+/* general statements */
 // select statement (read)
 function querySelect(query, params = []) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -30,10 +31,11 @@ function queryInsert(query, params = []) {
         return result.insertId;
     });
 }
+/* users */
 // get all users
 function getUsers() {
     return __awaiter(this, void 0, void 0, function* () {
-        const users = yield querySelect("SELECT * from users");
+        const users = yield querySelect("SELECT * FROM users");
         return users;
     });
 }
@@ -57,3 +59,12 @@ function addUser(first_name, last_name, year_id, major_id) {
     });
 }
 exports.addUser = addUser;
+/* courses */
+// get all courses
+function getCourses() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const courses = yield querySelect("SELECT * FROM courses");
+        return courses;
+    });
+}
+exports.getCourses = getCourses;

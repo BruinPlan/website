@@ -1,4 +1,4 @@
-.class-container {
+.course-container {
     border: 1px solid lightgrey;
     border-radius: 2px;
     padding: 8px;
@@ -6,6 +6,6 @@
     background-color: white;
 }
 
-.class-container.isDragging {
+.course-container.isDragging {
     background-color: lightgray;
 }

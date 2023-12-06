@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_js_1 = require("./db.js");
 const router = express_1.default.Router();
+/* users */
 // get all users
 router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield (0, db_js_1.getUsers)();
@@ -31,5 +32,10 @@ router.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const { first_name, last_name, year_id, major_id } = req.body;
     const user = yield (0, db_js_1.addUser)(first_name, last_name, year_id, major_id);
     res.status(201).send(user);
+}));
+/* courses */
+router.get("/courses", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const courses = yield (0, db_js_1.getCourses)();
+    res.send(courses);
 }));
 exports.default = router;

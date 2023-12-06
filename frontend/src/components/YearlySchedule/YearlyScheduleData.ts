@@ -1,48 +1,52 @@
-export type ClassDataType = {
-    id: string;
-    content: string;
+export type CourseDataType = {
+    id: string
+    subjectArea: string
+    catalogNumber: string
+    title: string
+    units: number
+    description: string
 };
 
 export type ColumnDataType = {
-    id: string;
-    title: string;
-    classIds: string[];
+    id: string
+    title: string
+    courseIds: string[]
 };
 
 type ScheduleDataType = {
-    classes: Record<string, ClassDataType>;
-    columns: Record<string, ColumnDataType>;
-    columnOrder: string[];
+    courses: Record<string, CourseDataType>
+    columns: Record<string, ColumnDataType>
+    columnOrder: string[]
 };
 
 export const scheduleData: ScheduleDataType = {
-    classes: {
-        'fall-1': { id: 'fall-1', content: 'Fall 1' },
-        'fall-2': { id: 'fall-2', content: 'Fall 2' },
-        'fall-3': { id: 'fall-3', content: 'Fall 3' },
-        'fall-4': { id: 'fall-4', content: 'Fall 4' }
+    courses: {
+        '1': { id: '1', subjectArea: 'A', catalogNumber: 'B', title: 'CS 1', units: 4, description: 'Fall 1' },
+        '2': { id: '2', subjectArea: 'A', catalogNumber: 'B', title: 'CS 2', units: 4, description: 'Fall 2' },
+        '3': { id: '3', subjectArea: 'A', catalogNumber: 'B', title: 'CS 3', units: 4, description: 'Fall 3' },
+        '4': { id: '4', subjectArea: 'A', catalogNumber: 'B', title: 'CS 4', units: 4, description: 'Fall 4' }
     },
     columns: {
         'fall': {
             id: 'fall',
             title: 'Fall',
-            classIds: ['fall-1', 'fall-2', 'fall-3', 'fall-4']
+            courseIds: ['1', '2', '3']
         },
         'winter': {
             id: 'winter',
             title: 'Winter',
-            classIds: []
+            courseIds: ['4']
         },
         'spring': {
             id: 'spring',
             title: 'Spring',
-            classIds: []
+            courseIds: []
         },
         'summer': {
             id: 'summer',
             title: 'Summer',
-            classIds: []
+            courseIds: []
         }
     },
     columnOrder: ['fall', 'winter', 'spring', 'summer']
-};
+}

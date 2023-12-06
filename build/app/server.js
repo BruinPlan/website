@@ -8,7 +8,7 @@ const express_1 = __importDefault(require("express"));
 const router_js_1 = __importDefault(require("./router.js"));
 const path_1 = __importDefault(require("path"));
 class Server {
-    constructor(app) {
+    constructor() {
         this.app = (0, express_1.default)();
         this.app.use(express_1.default.json());
         // enable cors

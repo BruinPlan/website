@@ -13,9 +13,8 @@ declare global {
     }
   }
 
-const app = express();
 const domain = process.env.DB_HOST
 const port = process.env.PORT
 
-const server = new Server(app);
+const server = new Server();
 server.start(domain, port);

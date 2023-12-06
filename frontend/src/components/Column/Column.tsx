@@ -1,13 +1,15 @@
 import React from 'react'
-import { ClassDataType, ColumnDataType } from '../YearlySchedule/YearlyScheduleData'
-import Class from '../Class/Class'
-import './Column.css'
+import { CourseDataType, ColumnDataType } from '../YearlySchedule/YearlyScheduleData'
+import Course from '../Course/Course'
+import AddCourseModal from '../AddCourseModal/AddCourseModal'
 import { Droppable } from 'react-beautiful-dnd'
+import './Column.css'
 
 type ColumnType = {
     key: string,
     column: ColumnDataType,
-    classes: ClassDataType[]
+    courses: CourseDataType[],
+    fullCourseList: CourseDataType[]
 }
 
 function Column(props: ColumnType) {
@@ -18,19 +20,19 @@ function Column(props: ColumnType) {
             
             <Droppable droppableId={props.column.id}>
                 { (provided, snapshot) => (
-                    <div className={ "class-list " + (snapshot.isDraggingOver ? "isDraggingOver" : "") }
+                    <div className={ "course-list " + (snapshot.isDraggingOver ? "isDraggingOver" : "") }
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                     >
-                        { props.classes.map((className, index) => (
-                            <Class key={className.id} class={className} index={index} />
+                        { props.courses.map((courseName, index) => (
+                            <Course key={courseName.id} course={courseName} index={index} />
                         ))}
                         { provided.placeholder }
                     </div>
                 )}
             </Droppable>
 
-            <button className="add-class-btn">+</button>
+            <AddCourseModal fullCourseList={props.fullCourseList} />
 
         </div>
     )

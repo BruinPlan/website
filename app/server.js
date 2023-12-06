@@ -4,7 +4,7 @@ import path from 'path'
 
 
 export class Server {
-  constructor(app) {
+  constructor() {
     this.app = express()
     this.app.use(express.json())
 
