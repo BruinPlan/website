@@ -12,13 +12,15 @@ passport.use(new GoogleStrategy({
   scope: ['profile', 'email'],
 },
 async (accessToken, refreshToken, profile, done) => {
-  console.log('Attempting to authenticate user')
+  console.log('Authenticating user')
   try {
     const user = await getUser(profile.id)
     if (user) {
+      console.log(`User ${user.google_id} found`)
       return done(null, user)
     }
       const newUser = await addUser(profile.name.givenName, profile.name.familyName, 1, 1, profile.id)
+      console.log(`User ${newUser.google_id} created`)
       return done(null, newUser)
   } catch (err) {
     console.log(err)

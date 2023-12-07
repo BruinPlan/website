@@ -16,7 +16,7 @@ class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.app.use(express_1.default.json());
-        this.app.use((0, cors_1.default)());
+        this.app.use((0, cors_1.default)("http://127.0.0.1:3000"));
         // enable cors
         this.app.use((req, res, next) => {
             res.header('Access-Control-Allow-Origin', '*');

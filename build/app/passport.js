@@ -23,13 +23,15 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     callbackURL: `http://127.0.0.1:3000/auth/google/callback`,
     scope: ['profile', 'email'],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Attempting to authenticate user');
+    console.log('Authenticating user');
     try {
         const user = yield (0, db_js_1.getUser)(profile.id);
         if (user) {
+            console.log(`User ${user.google_id} found`);
             return done(null, user);
         }
         const newUser = yield (0, db_js_1.addUser)(profile.name.givenName, profile.name.familyName, 1, 1, profile.id);
+        console.log(`User ${newUser.google_id} created`);
         return done(null, newUser);
     }
     catch (err) {

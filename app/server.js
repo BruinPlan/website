@@ -11,7 +11,7 @@ export class Server {
   constructor() {
     this.app = express()
     this.app.use(express.json())
-    this.app.use(cors());
+    this.app.use(cors("http://127.0.0.1:3000"));
 
 
     // enable cors
