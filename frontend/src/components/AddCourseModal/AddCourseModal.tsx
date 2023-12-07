@@ -3,7 +3,7 @@ import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Modal from "@mui/material/Modal"
 import CourseDropdown from "../CourseDropdown/CourseDropdown"
-import { CourseDataType } from '../YearlySchedule/YearlyScheduleData'
+import { CourseDataType, classIsInYearlySchedule } from '../YearlySchedule/YearlyScheduleData'
 import { SelectChangeEvent } from "@mui/material/Select";
 import { postData } from '../../utils'
 import "./AddCourseModal.css"
@@ -35,6 +35,14 @@ function AddCourseModal(props: AddCourseModalProps) {
 
     // handle when add course button is clicked
     async function handleClick() {
+
+        // if course is already in schedule, abort
+        if (classIsInYearlySchedule(selectedCourseId, props.year)) {
+            alert("Course is already in schedule")
+            return
+        }
+
+        // update db and reload schedule
         const scheduleEntryBody = {
             user_id: 1,
             course_id: selectedCourseId,
@@ -42,7 +50,6 @@ function AddCourseModal(props: AddCourseModalProps) {
             quarter_name: props.quarter
         }
 
-        // update db and reload schedule
         await postData("http://127.0.0.1:3000/api/schedule-entries", scheduleEntryBody)
         props.reloadSchedule()
 

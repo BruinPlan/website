@@ -75,18 +75,26 @@ async function loadScheduleData(uid: string) {
     }
 
     scheduleEntries.forEach((entry: ScheduleEntryType) => {
-        const entryId = entry.id
         const year = scheduleData[entry.year]
         const course = courseMap[entry.course_id]
 
-        year.courses[entryId] = course
-        year.columns[entry.quarter].courseIds.push(entryId)
+        year.courses[course.id] = course
+        year.columns[entry.quarter].courseIds.push(course.id)
     })
 
     return scheduleData
 }
 
+// returns whether class is in yearly schedule
+function classIsInYearlySchedule(courseId: string, year: string) {
+    const yearlySchedule = scheduleData[year]
+    const courses = Object.values(yearlySchedule.courses)
+    const courseIds = courses.map(course => course.id)
+    console.log(courseIds, courseId)
+    return courseIds.includes(courseId)
+}
+
 // load schedule data
 await loadScheduleData('1')
 
-export { type CourseDataType, type ColumnDataType, fullCourseList, scheduleData, loadScheduleData }
+export { type CourseDataType, type ColumnDataType, fullCourseList, scheduleData, loadScheduleData, classIsInYearlySchedule }

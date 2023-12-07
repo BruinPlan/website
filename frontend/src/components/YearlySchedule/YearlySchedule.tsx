@@ -81,11 +81,8 @@ function YearlySchedule(props: YearlySchedulePropsType) {
     }
 
     async function reloadSchedule() {
-        console.log("reloading")
         const newScheduleData = await loadScheduleData('1')
-        console.log(newScheduleData)
         setSchedule(newScheduleData[props.year])
-        console.log(schedule)
     }
    
     return (
