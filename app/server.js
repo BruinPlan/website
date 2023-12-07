@@ -4,15 +4,12 @@ import { apiRouter, authRouter } from './router.js'
 import path from 'path'
 import { access } from 'fs'
 import passport from 'passport'
-import cors from 'cors'
 import './passport.js'
 
 export class Server {
   constructor() {
     this.app = express()
     this.app.use(express.json())
-    this.app.use(cors("http://127.0.0.1:3000"));
-
 
     // enable cors
     this.app.use((req, res, next) => {
