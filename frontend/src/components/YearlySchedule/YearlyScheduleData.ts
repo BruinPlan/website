@@ -1,4 +1,4 @@
-export type CourseDataType = {
+type CourseDataType = {
     id: string
     subjectArea: string
     catalogNumber: string
@@ -7,7 +7,7 @@ export type CourseDataType = {
     description: string
 };
 
-export type ColumnDataType = {
+type ColumnDataType = {
     id: string
     title: string
     courseIds: string[]
@@ -21,131 +21,72 @@ type ScheduleDataType = {
     }
 };
 
-// const uid = '1'
+// create schedule data
+const scheduleData: ScheduleDataType = {}
 
-export const scheduleData: ScheduleDataType = {
-    'freshman': {
-        courses: {
-            '1': { id: '1', subjectArea: 'A', catalogNumber: 'B', title: 'CS 1', units: 4, description: 'Fall 1' },
-            '2': { id: '2', subjectArea: 'A', catalogNumber: 'B', title: 'CS 2', units: 4, description: 'Fall 2' },
-            '3': { id: '3', subjectArea: 'A', catalogNumber: 'B', title: 'CS 3', units: 4, description: 'Fall 3' },
-            '4': { id: '4', subjectArea: 'A', catalogNumber: 'B', title: 'CS 4', units: 4, description: 'Fall 4' }
-        },
-        columns: {
-            'fall': {
-                id: 'fall',
-                title: 'Fall',
-                courseIds: ['1', '2', '3']
-            },
-            'winter': {
-                id: 'winter',
-                title: 'Winter',
-                courseIds: ['4']
-            },
-            'spring': {
-                id: 'spring',
-                title: 'Spring',
-                courseIds: []
-            },
-            'summer': {
-                id: 'summer',
-                title: 'Summer',
-                courseIds: []
-            }
-        },
-        columnOrder: ['fall', 'winter', 'spring', 'summer']
-    },
-    'sophomore': {
-        courses: {
-            '1': { id: '1', subjectArea: 'A', catalogNumber: 'B', title: 'CS 1', units: 4, description: 'Fall 1' },
-            '2': { id: '2', subjectArea: 'A', catalogNumber: 'B', title: 'CS 2', units: 4, description: 'Fall 2' },
-            '3': { id: '3', subjectArea: 'A', catalogNumber: 'B', title: 'CS 3', units: 4, description: 'Fall 3' },
-            '4': { id: '4', subjectArea: 'A', catalogNumber: 'B', title: 'CS 4', units: 4, description: 'Fall 4' }
-        },
-        columns: {
-            'fall': {
-                id: 'fall',
-                title: 'Fall',
-                courseIds: ['1', '2']
-            },
-            'winter': {
-                id: 'winter',
-                title: 'Winter',
-                courseIds: ['3']
-            },
-            'spring': {
-                id: 'spring',
-                title: 'Spring',
-                courseIds: ['4']
-            },
-            'summer': {
-                id: 'summer',
-                title: 'Summer',
-                courseIds: []
-            }
-        },
-        columnOrder: ['fall', 'winter', 'spring', 'summer']
-    },
-    'junior': {
-        courses: {
-            '1': { id: '1', subjectArea: 'A', catalogNumber: 'B', title: 'CS 1', units: 4, description: 'Fall 1' },
-            '2': { id: '2', subjectArea: 'A', catalogNumber: 'B', title: 'CS 2', units: 4, description: 'Fall 2' },
-            '3': { id: '3', subjectArea: 'A', catalogNumber: 'B', title: 'CS 3', units: 4, description: 'Fall 3' },
-            '4': { id: '4', subjectArea: 'A', catalogNumber: 'B', title: 'CS 4', units: 4, description: 'Fall 4' }
-        },
-        columns: {
-            'fall': {
-                id: 'fall',
-                title: 'Fall',
-                courseIds: ['1']
-            },
-            'winter': {
-                id: 'winter',
-                title: 'Winter',
-                courseIds: ['2', '3']
-            },
-            'spring': {
-                id: 'spring',
-                title: 'Spring',
-                courseIds: ['4']
-            },
-            'summer': {
-                id: 'summer',
-                title: 'Summer',
-                courseIds: []
-            }
-        },
-        columnOrder: ['fall', 'winter', 'spring', 'summer']
-    },
-    'senior': {
-        courses: {
-            '1': { id: '1', subjectArea: 'A', catalogNumber: 'B', title: 'CS 1', units: 4, description: 'Fall 1' },
-            '2': { id: '2', subjectArea: 'A', catalogNumber: 'B', title: 'CS 2', units: 4, description: 'Fall 2' },
-            '3': { id: '3', subjectArea: 'A', catalogNumber: 'B', title: 'CS 3', units: 4, description: 'Fall 3' },
-            '4': { id: '4', subjectArea: 'A', catalogNumber: 'B', title: 'CS 4', units: 4, description: 'Fall 4' }
-        },
-        columns: {
-            'fall': {
-                id: 'fall',
-                title: 'Fall',
-                courseIds: ['1']
-            },
-            'winter': {
-                id: 'winter',
-                title: 'Winter',
-                courseIds: ['2']
-            },
-            'spring': {
-                id: 'spring',
-                title: 'Spring',
-                courseIds: ['3', '4']
-            },
-            'summer': {
-                id: 'summer',
-                title: 'Summer',
-                courseIds: []
-            }
-        },
-        columnOrder: ['fall', 'winter', 'spring', 'summer']
+// get full course list
+const fullCourseList = await fetch('http://127.0.0.1:3000/api/courses')
+        .then(response => response.json())
+
+// fetch schedule data from db
+async function loadScheduleData(uid: string) {
+    // get schedule entries for user using uid
+    const scheduleEntries = await fetch(`http://127.0.0.1:3000/api/schedule-entries/${uid}`)
+        .then(response => response.json())
+
+    // create course mapping of ids to course info
+    type CourseMapType = {
+        [key: string]: CourseDataType
     }
+
+    const courseMap: CourseMapType = fullCourseList.reduce((acc: CourseMapType, item: CourseDataType) => {
+        acc[item.id] = item
+        acc[item.id].id = acc[item.id].id.toString()
+        return acc
+    }, {})
+
+    const years = ['freshman', 'sophomore', 'junior', 'senior']
+    const quarters = ['fall', 'winter', 'spring', 'summer']
+
+    // create skeleton
+    years.forEach(year => {
+        scheduleData[year] = {
+            courses: {},
+            columns: {},
+            columnOrder: []
+        }
+
+        quarters.forEach(quarter => {
+            scheduleData[year].columns[quarter] = {
+                id: quarter,
+                title: quarter.charAt(0).toUpperCase() + quarter.slice(1),
+                courseIds: []
+            }
+            scheduleData[year].columnOrder.push(quarter)
+        })
+    })
+
+    // add each schedule entry
+    type ScheduleEntryType = {
+        id: string,
+        course_id: string,
+        year: string,
+        quarter: string
+    }
+
+    scheduleEntries.forEach((entry: ScheduleEntryType) => {
+        const entryId = entry.id
+        const year = scheduleData[entry.year]
+        const course = courseMap[entry.course_id]
+
+        year.courses[entryId] = course
+        year.columns[entry.quarter].courseIds.push(entryId)
+    })
+
+    return scheduleData
 }
+
+// load schedule data
+await loadScheduleData('1')
+
+export { type CourseDataType, type ColumnDataType, fullCourseList, scheduleData, loadScheduleData }

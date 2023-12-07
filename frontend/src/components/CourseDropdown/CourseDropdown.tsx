@@ -12,13 +12,15 @@ type ClassType = {
 interface DropdownProps {
     labelText: string
     options: ClassType[]
+    onChange: (e: SelectChangeEvent) => void
 }
 
 function CourseDropdown(props: DropdownProps) {
-    const [age, setAge] = React.useState("");
+    const [course, setCourse] = React.useState("");
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setAge(event.target.value as string);
+    const handleChange = (e: SelectChangeEvent) => {
+        setCourse(e.target.value)
+        props.onChange(e)
     };
 
     return (
@@ -30,7 +32,7 @@ function CourseDropdown(props: DropdownProps) {
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={age}
+                    value={course}
                     label={props.labelText}
                     onChange={handleChange}
                 >

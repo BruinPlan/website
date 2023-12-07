@@ -17,7 +17,7 @@ async function queryInsert(query, params=[]) {
     return result.insertId
 }
 
-/* users */
+/* =============== users =============== */
 
 // get all users
 async function getUsers() {
@@ -43,32 +43,47 @@ async function addUser(first_name, last_name, year_id, major_id) {
     return getUser(insertId)
 }
 
-/* courses */
+/* =============== courses =============== */
 
 // get all courses
 async function getCourses() {
-    const courses = await querySelect("SELECT * FROM courses")
+    const courses = await querySelect(`SELECT c.id, sa.name AS subjectArea, catalog_number AS catalogNumber, title, units, description 
+                                        FROM courses c 
+                                        JOIN subject_areas sa ON c.subject_area_id = sa.id`)
     return courses
 }
 
-/* schedule entries */
+/* =============== schedule entries =============== */
+
+// get schedule entries by user id
+async function getScheduleEntries(user_id) {
+    const scheduleEntries = await querySelect(`SELECT se.id, se.course_id, y.name AS year, q.name AS quarter
+                                                FROM schedule_entries se
+                                                JOIN years y ON se.year_id = y.id
+                                                JOIN quarters q ON se.quarter_id = q.id
+                                                WHERE user_id = ?`, [user_id])
+    return scheduleEntries
+}
 
 // get schedule entry by id
 async function getScheduleEntry(id) {
-    const user = await querySelect("SELECT * FROM schedule_entries WHERE id = ?", [id])
-    return user[0]
+    const scheduleEntry = await querySelect("SELECT * FROM schedule_entries WHERE id = ?", [id])
+    return scheduleEntry
 }
 
 // insert new schedule entry
-async function addScheduleEntry(user_id, course_id, year_id, quarter_id) {
-    if (!user_id || !course_id || !year_id || !quarter_id) {
+async function addScheduleEntry(user_id, course_id, year_name, quarter_name) {
+    if (!user_id || !course_id || !year_name || !quarter_name) {
         return -1
     }
 
-    const insertId = await queryInsert("INSERT INTO schedule_entries (user_id, course_id, year_id, quarter_id) VALUES (?, ?, ?, ?)",
-        [user_id, course_id, year_id, quarter_id])
+    const insertId = await queryInsert(`INSERT INTO schedule_entries (user_id, course_id, year_id, quarter_id) 
+                                        VALUES (?, ?, 
+                                            (SELECT id FROM years WHERE years.name = ?),
+                                            (SELECT id FROM quarters WHERE quarters.name = ?))`,
+                                        [user_id, course_id, year_name, quarter_name])
 
     return getScheduleEntry(insertId)
 }
 
-export { getUsers, getUser, addUser, getCourses, addScheduleEntry }
+export { getUsers, getUser, addUser, getCourses, getScheduleEntries, addScheduleEntry }
