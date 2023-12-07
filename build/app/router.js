@@ -51,14 +51,11 @@ authRouter.get("/google/callback", passport_1.default.authenticate("google", { f
     // Successful authentication, redirect to success route or respond as needed
     res.redirect("/");
 });
-// authRouter.get("/google/success", isLoggedIn, (req, res) => {
-//   res.send(req.user)
-// })
 authRouter.get("/google/failed", (req, res) => {
     res.send("Login failed");
 });
 // logout user
-authRouter.get("/logout", (req, res) => {
+authRouter.post("/logout", (req, res) => {
     req.logout(function (err) {
         if (err) {
             return next(err);

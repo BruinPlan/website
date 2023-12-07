@@ -11,21 +11,19 @@ passport.use(new GoogleStrategy({
   callbackURL: `http://127.0.0.1:3000/auth/google/callback`,
   scope: ['profile', 'email'],
 },
-(accessToken, refreshToken, profile, done) => {
-  console.log('Attempting to authenticate user test')
-  console.log(profile.id)
-  return done(null, profile)
-  // try {
-  //   const user = getUser(profile.id)
-  //   if (user) {
-  //     return done(null, profile)
-  //   }
-  //     addUser(profile.name.givenName, profile.name.familyName, 1, 1)
-  //     return done(null, profile)
-  // } catch (err) {
-  //   console.log(err)
-  //   return done(err, null)
-  // }
+async (accessToken, refreshToken, profile, done) => {
+  console.log('Attempting to authenticate user')
+  try {
+    const user = await getUser(profile.id)
+    if (user) {
+      return done(null, user)
+    }
+      const newUser = await addUser(profile.name.givenName, profile.name.familyName, 1, 1)
+      return done(null, newUser)
+  } catch (err) {
+    console.log(err)
+    return done(err, null)
+  }
 }));
 
 // Serialize and deserialize user
