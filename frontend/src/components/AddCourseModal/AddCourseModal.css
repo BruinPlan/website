@@ -1,4 +1,4 @@
-.add-course-btn {
+.open-course-modal-btn{
     width: 2rem;
     height: 2rem;
     background-color: var(--blue);
@@ -10,7 +10,7 @@
     font-size: 0.85rem;
 }
 
-.add-course-btn:hover {
+.open-course-modal-btn:hover {
     background-color: var(--darker-blue);
     cursor: pointer;
     transform: scale(1.1);
@@ -45,14 +45,19 @@
     flex: 1;
 }
 
-.course-modal-box button {
+.add-course-btn {
     width: 5rem;
     padding: 0.2rem 1.5rem;
     background-color: var(--blue);
     color: white;
     border-radius: 2rem;
-    border-style: solid;
+    border: 0;
     box-shadow: none;
     transition: 0.25s ease;
     margin: auto;
+    cursor: pointer;
+}
+
+.add-course-btn:hover {
+    transform: scale(1.1);
 }

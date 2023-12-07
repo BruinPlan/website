@@ -9,7 +9,9 @@ type ColumnProps = {
     key: string,
     column: ColumnDataType,
     courses: CourseDataType[],
-    fullCourseList: CourseDataType[]
+    fullCourseList: CourseDataType[],
+    year: string,
+    reloadSchedule: () => void
 }
 
 function Column(props: ColumnProps) {
@@ -32,7 +34,7 @@ function Column(props: ColumnProps) {
                 )}
             </Droppable>
 
-            <AddCourseModal fullCourseList={props.fullCourseList} />
+            <AddCourseModal fullCourseList={props.fullCourseList} year={props.year} quarter={props.column.id} reloadSchedule={props.reloadSchedule} />
 
         </div>
     )

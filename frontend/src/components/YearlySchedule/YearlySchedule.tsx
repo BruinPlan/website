@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { scheduleData } from './YearlyScheduleData'
+import { scheduleData, loadScheduleData, fullCourseList } from './YearlyScheduleData'
 import Column from '../Column/Column'
 import './YearlySchedule.css'
 
@@ -9,8 +9,7 @@ type YearlySchedulePropsType = {
 }
 
 function YearlySchedule(props: YearlySchedulePropsType) {
-    const [schedule, setSchedule] = useState(scheduleData);
-    const [fullCourseList, setFullCourseList] = useState([])
+    const [schedule, setSchedule] = useState(scheduleData[props.year])
 
     // updates columns once a course has been dragged
     const onDragEnd = (result: any) => {
@@ -28,8 +27,8 @@ function YearlySchedule(props: YearlySchedulePropsType) {
         /* create new course ID array with new ordering after drag and drop*/
 
         // get source and destination quarters
-        const start = schedule[props.year].columns[source.droppableId]
-        const finish = schedule[props.year].columns[destination.droppableId]
+        const start = schedule.columns[source.droppableId]
+        const finish = schedule.columns[destination.droppableId]
 
         // if course is dragged within the same quarter
         if (start === finish) {
@@ -81,23 +80,24 @@ function YearlySchedule(props: YearlySchedulePropsType) {
         setSchedule(newSchedule)
     }
 
-    useEffect(() => {
-        // fetch all courses
-        fetch(`http://127.0.0.1:3000/api/courses`)
-            .then(response =>response.json())
-            .then(data => setFullCourseList(data))
-    })
+    async function reloadSchedule() {
+        console.log("reloading")
+        const newScheduleData = await loadScheduleData('1')
+        console.log(newScheduleData)
+        setSchedule(newScheduleData[props.year])
+        console.log(schedule)
+    }
    
     return (
         <div className="yearly-schedule">
             <DragDropContext onDragEnd={onDragEnd} >
                 <div className="quarters-container">
                     { 
-                        schedule[props.year].columnOrder.map(columnId => {
-                            const column = schedule[props.year].columns[columnId];
-                            const courses = column.courseIds.map(courseId => schedule[props.year].courses[courseId]);
+                        schedule.columnOrder.map(columnId => {
+                            const column = schedule.columns[columnId];
+                            const courses = column.courseIds.map(courseId => schedule.courses[courseId]);
 
-                            return <Column key={column.id} column={column} courses={courses} fullCourseList={fullCourseList} />
+                            return <Column key={column.id} column={column} courses={courses} fullCourseList={fullCourseList} year={props.year} reloadSchedule={reloadSchedule}  />
                         })
                     }
                 </div>

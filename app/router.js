@@ -1,9 +1,9 @@
 import express from 'express'
-import { getUsers, getUser, addUser , getCourses, addScheduleEntry } from './db.js'
+import { getUsers, getUser, addUser , getCourses, getScheduleEntries, addScheduleEntry } from './db.js'
 
 const router = express.Router()
 
-/* users */
+/* =============== users =============== */
 
 // get all users
 router.get("/users", async (req, res) => {
@@ -25,7 +25,7 @@ router.post("/users", async (req, res) => {
   res.status(201).send(user)
 })
 
-/* courses */
+/*  =============== courses  =============== */
 
 // get all courses
 router.get("/courses", async (req, res) => {
@@ -33,12 +33,19 @@ router.get("/courses", async (req, res) => {
     res.send(courses)
 })
 
-/* schedule entries */
+/*  =============== schedule entries =============== */
+
+// get schedule entries by user id
+router.get("/schedule-entries/:user_id", async(req, res) => {
+    const user_id = req.params.user_id
+    const user = await getScheduleEntries(user_id)
+    res.send(user)
+  })
 
 // add schedule entry
 router.post("/schedule-entries", async (req, res) => {
-    const { user_id, course_id, year_id, quarter_id } = req.body
-    const schedule_entry = await addScheduleEntry(user_id, course_id, year_id, quarter_id)
+    const { user_id, course_id, year_name, quarter_name } = req.body
+    const schedule_entry = await addScheduleEntry(user_id, course_id, year_name, quarter_name)
     res.status(201).send(schedule_entry)
 })
 
