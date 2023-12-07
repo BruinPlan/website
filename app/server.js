@@ -17,8 +17,15 @@ export class Server {
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
       next()
     })
-
-    this.app.use(session({ secret: 'cats' }))
+    
+    // session middleware
+    this.app.use(
+      session({
+        secret: 'cats',
+        resave: false, // Set to false to avoid unnecessary session saves
+        saveUninitialized: false // Set to false to avoid storing uninitialized sessions
+      })
+    );
 
     // Passport middleware
     this.app.use(passport.initialize())

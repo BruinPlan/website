@@ -63,11 +63,13 @@ function Login() {
     
   const handleLogin = () => {
       oauthSignIn()
-    }
+  }
   
   const handleLogout = async () => {
+    console.log("Logging out");
       try {
         const res = await fetch("http://127.0.0.1:3000/auth/logout", { credentials: "include" });
+        console.log(res)
         if (res.ok) {
           setIsLogged(false);
         } else {
@@ -77,7 +79,7 @@ function Login() {
       } catch (err) {
         console.error(err);
       }
-    };
+  };
 
   return (
     <>

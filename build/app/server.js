@@ -10,20 +10,23 @@ const router_js_1 = require("./router.js");
 const path_1 = __importDefault(require("path"));
 const fs_1 = require("fs");
 const passport_1 = __importDefault(require("passport"));
-const cors_1 = __importDefault(require("cors"));
 require("./passport.js");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.app.use(express_1.default.json());
-        this.app.use((0, cors_1.default)("http://127.0.0.1:3000"));
         // enable cors
         this.app.use((req, res, next) => {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
         });
-        this.app.use((0, express_session_1.default)({ secret: 'cats' }));
+        // session middleware
+        this.app.use((0, express_session_1.default)({
+            secret: 'cats',
+            resave: false, // Set to false to avoid unnecessary session saves
+            saveUninitialized: false // Set to false to avoid storing uninitialized sessions
+        }));
         // Passport middleware
         this.app.use(passport_1.default.initialize());
         this.app.use(passport_1.default.session());

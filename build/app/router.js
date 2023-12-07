@@ -56,6 +56,7 @@ authRouter.get("/google/failed", (req, res) => {
 });
 // logout user
 authRouter.post("/logout", (req, res) => {
+    console.log('Logging out user');
     req.logout(function (err) {
         if (err) {
             return next(err);
