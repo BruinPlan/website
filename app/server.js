@@ -1,15 +1,18 @@
 import express from 'express'
+import session from 'express-session'
 import { apiRouter, authRouter } from './router.js'
 import path from 'path'
 import { access } from 'fs'
-import cookieSession from 'cookie-session'
 import passport from 'passport'
+import cors from 'cors'
 import './passport.js'
 
 export class Server {
   constructor() {
     this.app = express()
     this.app.use(express.json())
+    this.app.use(cors());
+
 
     // enable cors
     this.app.use((req, res, next) => {
@@ -18,10 +21,7 @@ export class Server {
       next()
     })
 
-    this.app.use(cookieSession({
-      name: 'session',
-      keys: ['key1', 'key2']
-    }))
+    this.app.use(session({ secret: 'cats' }))
 
     // Passport middleware
     this.app.use(passport.initialize())

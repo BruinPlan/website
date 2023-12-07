@@ -33,27 +33,33 @@ apiRouter.post("/users", async (req, res) => {
 
 // check if user logged in
 const isLoggedIn = (req, res, next) => {
-  if (req.user) {
-    next()
-  } else {
-    res.sendStatus(401)
-  }
+  req.user ? next() : res.sendStatus(401)
 }
 
 // authenticate user
-authRouter.get("/google", passport.authenticate('google', { scope: ['profile', 'email'] }))
+authRouter.get("/google", 
+  passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 // callback route for google to redirect to
-authRouter.get("/google/callback", passport.authenticate('google', { failureRedirect: '/login' }),
-(req, res) => {
-  // Successful authentication, redirect home.
-  res.redirect('/')
+authRouter.get("/google/callback", 
+  passport.authenticate('google', { 
+    successRedirect: '/google/success',
+    failureRedirect: '/google/failed' }),
+)
+
+authRouter.get("/google/success", isLoggedIn, (req, res) => {
+  res.send(req.user)
+})
+
+authRouter.get("/google/failed", (req, res) => {
+  res.send("Login failed")
 })
 
 // logout user
 authRouter.get("/logout", (req, res) => {
   req.session = null;  
   req.logout()
+  res.send('Logged out')
   res.redirect('/')
 })
 
