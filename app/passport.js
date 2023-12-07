@@ -18,7 +18,7 @@ async (accessToken, refreshToken, profile, done) => {
     if (user) {
       return done(null, user)
     }
-      const newUser = await addUser(profile.name.givenName, profile.name.familyName, 1, 1)
+      const newUser = await addUser(profile.name.givenName, profile.name.familyName, 1, 1, profile.id)
       return done(null, newUser)
   } catch (err) {
     console.log(err)

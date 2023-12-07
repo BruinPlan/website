@@ -41,18 +41,18 @@ exports.getUsers = getUsers;
 // get user by id
 function getUser(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = yield querySelect("SELECT * FROM users WHERE id = ?", [id]);
+        const user = yield querySelect("SELECT * FROM users WHERE google_id = ?", [id]);
         return user[0];
     });
 }
 exports.getUser = getUser;
 // insert new user
-function addUser(first_name, last_name, year_id, major_id) {
+function addUser(first_name, last_name, year_id, major_id, google_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!first_name || !last_name || !year_id || !major_id) {
+        if (!first_name || !last_name || !year_id || !major_id || !google_id) {
             return -1;
         }
-        const insertId = yield queryInsert("INSERT INTO users (first_name, last_name, year_id, major_id) VALUES (?, ?, ?, ?)", [first_name, last_name, year_id, major_id]);
+        const insertId = yield queryInsert("INSERT INTO users (first_name, last_name, year_id, major_id, google_id) VALUES (?, ?, ?, ?, ?)", [first_name, last_name, year_id, major_id, google_id]);
         return getUser(insertId);
     });
 }

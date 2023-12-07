@@ -23,18 +23,18 @@ async function getUsers() {
 
 // get user by id
 async function getUser(id) {
-    const user = await querySelect("SELECT * FROM users WHERE id = ?", [id])
+    const user = await querySelect("SELECT * FROM users WHERE google_id = ?", [id])
     return user[0]
 }
 
 // insert new user
-async function addUser(first_name, last_name, year_id, major_id) {
-    if (!first_name || !last_name || !year_id || !major_id) {
+async function addUser(first_name, last_name, year_id, major_id, google_id) {
+    if (!first_name || !last_name || !year_id || !major_id || !google_id) {
         return -1
     }
 
-    const insertId = await queryInsert("INSERT INTO users (first_name, last_name, year_id, major_id) VALUES (?, ?, ?, ?)", 
-        [first_name, last_name, year_id, major_id])
+    const insertId = await queryInsert("INSERT INTO users (first_name, last_name, year_id, major_id, google_id) VALUES (?, ?, ?, ?, ?)", 
+        [first_name, last_name, year_id, major_id, google_id])
 
     return getUser(insertId)
 }
