@@ -7,11 +7,11 @@ import CourseDropdown from "../CourseDropdown/CourseDropdown"
 import { CourseDataType } from '../YearlySchedule/YearlyScheduleData'
 import "./AddCourseModal.css"
 
-type AddCourseModalType = {
+type AddCourseModalProps = {
     fullCourseList: CourseDataType[]
 }
 
-function AddCourseModal(props: AddCourseModalType) {
+function AddCourseModal(props: AddCourseModalProps) {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);

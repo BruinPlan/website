@@ -64,16 +64,16 @@ function YearTabs() {
         <Tab label="Senior" {...a11yProps(3)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <YearlySchedule />
+        <YearlySchedule year="freshman" />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <YearlySchedule />
+        <YearlySchedule year="sophomore" />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <YearlySchedule />
+        <YearlySchedule year="junior" />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <YearlySchedule />
+        <YearlySchedule year="senior" />
       </TabPanel>
     </Box>
   );

@@ -5,14 +5,14 @@ import AddCourseModal from '../AddCourseModal/AddCourseModal'
 import { Droppable } from 'react-beautiful-dnd'
 import './Column.css'
 
-type ColumnType = {
+type ColumnProps = {
     key: string,
     column: ColumnDataType,
     courses: CourseDataType[],
     fullCourseList: CourseDataType[]
 }
 
-function Column(props: ColumnType) {
+function Column(props: ColumnProps) {
     return (
         <div className="column-container">
 

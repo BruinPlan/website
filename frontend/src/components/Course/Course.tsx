@@ -3,13 +3,13 @@ import { Draggable } from 'react-beautiful-dnd'
 import { CourseDataType } from '../YearlySchedule/YearlyScheduleData'
 import './Course.css'
 
-type ClassType = {
+type ClassProps = {
     key: string,
     course: CourseDataType,
     index: number
 }
 
-function Class(props: ClassType) {
+function Class(props: ClassProps) {
     return (
         <Draggable draggableId={props.course.id} index={props.index}>
             {(provided, snapshot) => (
