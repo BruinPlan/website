@@ -12,22 +12,22 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: `http://127.0.0.1:3000/auth/google/callback`,
-    passReqToCallback: true,
     scope: ['profile', 'email'],
 }, (accessToken, refreshToken, profile, done) => {
-    console.log('Attempting to authenticate user');
-    try {
-        const user = (0, db_js_1.getUser)(profile.id);
-        if (user) {
-            return done(null, profile);
-        }
-        (0, db_js_1.addUser)(profile.name.givenName, profile.name.familyName, 1, 1);
-        return done(null, profile);
-    }
-    catch (err) {
-        console.log(err);
-        return done(err, null);
-    }
+    console.log('Attempting to authenticate user test');
+    console.log(profile.id);
+    return done(null, profile);
+    // try {
+    //   const user = getUser(profile.id)
+    //   if (user) {
+    //     return done(null, profile)
+    //   }
+    //     addUser(profile.name.givenName, profile.name.familyName, 1, 1)
+    //     return done(null, profile)
+    // } catch (err) {
+    //   console.log(err)
+    //   return done(err, null)
+    // }
 }));
 // Serialize and deserialize user
 passport_1.default.serializeUser((user, done) => {

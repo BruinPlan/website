@@ -1,23 +1,22 @@
 // import { useGoogleLogin } from "@react-oauth/google"
 // import { googleLogout } from "@react-oauth/google"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import "./Login.css"
 
 function Login() {
     const [isLogged, setIsLogged] = useState(false)
-
-    useEffect(() => {
-        // Check if the user is already logged in on the backend
-        fetch("/user", { credentials: "include" })
-          .then((res) => {
-            if (res.ok) {
-              setIsLogged(true);
-              console.log("User is logged in");
-            }
-          })
-          .catch((err) => console.error(err));
-      }, []);
     
+    // useEffect(() => {
+    //     // Check if the user is already logged in on the backend
+    //     fetch("http://127.0.0.1:3000/api/uses", { credentials: "include" })
+    //       .then((res) => {
+    //         if (res.ok) {
+    //           setIsLogged(true);
+    //           console.log("User is logged in");
+    //         }
+    //       })
+    //       .catch((err) => console.error(err));
+    //   }, []);
 
     const handleLogin = async () => {
         try {

@@ -41,15 +41,13 @@ authRouter.get("/google",
   passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 // callback route for google to redirect to
-authRouter.get("/google/callback", 
-  passport.authenticate('google', { 
-    successRedirect: '/google/success',
-    failureRedirect: '/google/failed' }),
-)
-
-authRouter.get("/google/success", isLoggedIn, (req, res) => {
-  res.send(req.user)
-})
+authRouter.get("/google/callback",
+  passport.authenticate("google", { failureRedirect: "/google/failed" }),
+  (req, res) => {
+    // Successful authentication, redirect to success route or respond as needed
+    res.redirect("/");
+  }
+);
 
 authRouter.get("/google/failed", (req, res) => {
   res.send("Login failed")
@@ -57,10 +55,18 @@ authRouter.get("/google/failed", (req, res) => {
 
 // logout user
 authRouter.get("/logout", (req, res) => {
-  req.session = null;  
-  req.logout()
-  res.send('Logged out')
-  res.redirect('/')
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
 })
+
+authRouter.get('/user', (req, res) => {
+  if (req.user) {
+    res.json(req.user); // Return user data
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+});
 
 export { apiRouter, authRouter }
