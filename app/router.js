@@ -42,19 +42,21 @@ authRouter.get("/google",
 
 // callback route for google to redirect to
 authRouter.get("/google/callback",
-  passport.authenticate("google", { failureRedirect: "/google/failed" }),
+  passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    // Successful authentication, redirect to success route or respond as needed
+    console.log(req.user)
     res.redirect("/");
   }
 );
 
-authRouter.get("/google/failed", (req, res) => {
+authRouter.get("/failure", (req, res) => {
+  console.log(req.user)
+  console.log("Login failed")
   res.send("Login failed")
 })
 
 // logout user
-authRouter.post("/logout", (req, res) => {
+authRouter.get("/logout", (req, res) => {
   console.log('Logging out user')
   req.logout(function(err) {
     if (err) { return next(err) }

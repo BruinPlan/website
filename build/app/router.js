@@ -47,15 +47,17 @@ const isLoggedIn = (req, res, next) => {
 // authenticate user
 authRouter.get("/google", passport_1.default.authenticate('google', { scope: ['profile', 'email'] }));
 // callback route for google to redirect to
-authRouter.get("/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/google/failed" }), (req, res) => {
-    // Successful authentication, redirect to success route or respond as needed
+authRouter.get("/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/" }), (req, res) => {
+    console.log(req.user);
     res.redirect("/");
 });
-authRouter.get("/google/failed", (req, res) => {
+authRouter.get("/failure", (req, res) => {
+    console.log(req.user);
+    console.log("Login failed");
     res.send("Login failed");
 });
 // logout user
-authRouter.post("/logout", (req, res) => {
+authRouter.get("/logout", (req, res) => {
     console.log('Logging out user');
     req.logout(function (err) {
         if (err) {

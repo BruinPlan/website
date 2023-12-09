@@ -2,8 +2,10 @@ import express from 'express'
 import session from 'express-session'
 import { apiRouter, authRouter } from './router.js'
 import path from 'path'
-import { access } from 'fs'
 import passport from 'passport'
+import cors from 'cors'
+import MySQLStore from 'express-mysql-session'
+
 import './passport.js'
 
 export class Server {
@@ -19,17 +21,27 @@ export class Server {
     })
     
     // session middleware
-    this.app.use(
-      session({
-        secret: 'cats',
+    this.app.use(session({
+        // key: 'session_cookie_name',
+        secret: 'session_cookie_secret',
+        // store: new MySQLStore({
+        //   host: process.env.DB_HOST,
+        //   port: process.env.PORT,
+        //   user: process.env.DB_USER,
+        //   password: process.env.DB_PASS,
+        //   database: 'sessions',
+        // }),
         resave: false, // Set to false to avoid unnecessary session saves
-        saveUninitialized: false // Set to false to avoid storing uninitialized sessions
+        saveUninitialized: false, // Set to false to avoid storing uninitialized sessions
+        cookie: {maxAge: 1000 * 60 * 60 * 24}, // 1 day
       })
     );
 
     // Passport middleware
     this.app.use(passport.initialize())
     this.app.use(passport.session())
+
+    // this.app.use(cors({ origin: 'http://127.0.0.1:3000', methods: "GET,POST,PUT,DELETE", credentials: true }))
 
     // api
     this.app.use('/api', apiRouter)
@@ -49,6 +61,7 @@ export class Server {
     this.app.get('*', (req, res) => {
       res.sendFile(path.join(frontendPath, '/index.html'))
     })
+
   }
 
   // start server

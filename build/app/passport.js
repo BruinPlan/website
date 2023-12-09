@@ -15,36 +15,36 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const passport_google_oauth20_1 = require("passport-google-oauth20");
 const db_js_1 = require("./db.js");
-// import User from './models/user.js';
 // Configure Passport strategies
 passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: `http://127.0.0.1:3000/auth/google/callback`,
     scope: ['profile', 'email'],
-}, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
+}, (accessToken, refreshToken, profile, cb) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('Authenticating user');
     try {
         const user = yield (0, db_js_1.getUser)(profile.id);
-        // If previously logged in, fetch user
-        if (user) {
-            console.log(`User ${user.google_id} found`);
-            return done(null, user);
-        }
         // If new user, create new user
-        const newUser = yield (0, db_js_1.addUser)(profile.name.givenName, profile.name.familyName, 1, 1, profile.id);
-        console.log(`User ${newUser.google_id} created`);
-        return done(null, newUser);
+        if (!user) {
+            const newUser = yield yield (0, db_js_1.addUser)(profile.name.givenName, profile.name.familyName, 1, 1, profile.id);
+            console.log(`User ${profile.id} created`);
+            return cb(null, newUser);
+        }
+        // If previously logged in, fetch user
+        console.log(`User ${profile.id} found`);
+        return cb(null, user); // Returns user, accessible by req.session.passport.user
     }
     catch (err) {
         console.log(err);
-        return done(err, null);
+        return cb(err, null);
     }
 })));
-// Serialize and deserialize user
+// Serialize user by google_id
 passport_1.default.serializeUser((user, done) => {
-    done(null, user);
+    done(null, user.google_id);
 });
-passport_1.default.deserializeUser((user, done) => {
-    done(null, user);
+// Deserialize user by google_id
+passport_1.default.deserializeUser((google_id, done) => {
+    (0, db_js_1.getUser)(google_id).then(user => done(null, user));
 });

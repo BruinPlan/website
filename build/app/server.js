@@ -8,8 +8,9 @@ const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
 const router_js_1 = require("./router.js");
 const path_1 = __importDefault(require("path"));
-const fs_1 = require("fs");
 const passport_1 = __importDefault(require("passport"));
+const cors_1 = __importDefault(require("cors"));
+const express_mysql_session_1 = __importDefault(require("express-mysql-session"));
 require("./passport.js");
 class Server {
     constructor() {
@@ -23,13 +24,23 @@ class Server {
         });
         // session middleware
         this.app.use((0, express_session_1.default)({
-            secret: 'cats',
+            // key: 'session_cookie_name',
+            secret: 'session_cookie_secret',
+            // store: new MySQLStore({
+            //   host: process.env.DB_HOST,
+            //   port: process.env.PORT,
+            //   user: process.env.DB_USER,
+            //   password: process.env.DB_PASS,
+            //   database: 'sessions',
+            // }),
             resave: false, // Set to false to avoid unnecessary session saves
-            saveUninitialized: false // Set to false to avoid storing uninitialized sessions
+            saveUninitialized: false, // Set to false to avoid storing uninitialized sessions
+            cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day
         }));
         // Passport middleware
         this.app.use(passport_1.default.initialize());
         this.app.use(passport_1.default.session());
+        // this.app.use(cors({ origin: 'http://127.0.0.1:3000', methods: "GET,POST,PUT,DELETE", credentials: true }))
         // api
         this.app.use('/api', router_js_1.apiRouter);
         this.app.use('/auth', router_js_1.authRouter);
