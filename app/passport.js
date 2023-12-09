@@ -12,6 +12,7 @@ passport.use(new GoogleStrategy({
 async (accessToken, refreshToken, profile, cb) => {
   console.log('Authenticating user')
   try {
+    console.log(profile)
     const user = await getUser(profile.id)
     // If new user, create new user
     if (!user) {

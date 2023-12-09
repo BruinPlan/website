@@ -1,6 +1,6 @@
 import express from 'express'
 import session from 'express-session'
-import { apiRouter, authRouter } from './router.js'
+import { router, authRouter } from './router.js'
 import path from 'path'
 import passport from 'passport'
 import cors from 'cors'
@@ -12,6 +12,12 @@ export class Server {
   constructor() {
     this.app = express()
     this.app.use(express.json())
+
+    const corsOptions = {
+      optionsSuccessStatus: 200,
+      credentials: true,
+    }
+    this.app.use(cors(corsOptions))
 
     // enable cors
     this.app.use((req, res, next) => {
@@ -33,7 +39,9 @@ export class Server {
         // }),
         resave: false, // Set to false to avoid unnecessary session saves
         saveUninitialized: false, // Set to false to avoid storing uninitialized sessions
-        cookie: {maxAge: 1000 * 60 * 60 * 24}, // 1 day
+        cookie: {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60}, // 1 hour
       })
     );
 
@@ -44,7 +52,7 @@ export class Server {
     // this.app.use(cors({ origin: 'http://127.0.0.1:3000', methods: "GET,POST,PUT,DELETE", credentials: true }))
 
     // api
-    this.app.use('/api', apiRouter)
+    this.app.use('/api', router)
     this.app.use('/auth', authRouter)
 
     // handle errors

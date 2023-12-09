@@ -1,35 +1,62 @@
 import express from 'express'
-import { getUsers, getUser, addUser } from './db.js'
+import { getUsers, getUser, addUser , getCourses, getScheduleEntries, addScheduleEntry, updateScheduleEntry } from './db.js'
 import passport from 'passport'
-import './passport.js'
 
-const apiRouter = express.Router()
+const router = express.Router()
 const authRouter = express.Router()
 
-// API routes
+/* =============== users =============== */
 
 // get all users
-apiRouter.get("/users", async (req, res) => {
+router.get("/users", async (req, res) => {
   const users = await getUsers()
   res.send(users)
 })
 
 // get user by id
-apiRouter.get("/users/:id", async(req, res) => {
+router.get("/users/:id", async(req, res) => {
   const id = req.params.id
   const user = await getUser(id)
   res.send(user)
 })
 
 // add user
-apiRouter.post("/users", async (req, res) => {
+router.post("/users", async (req, res) => {
   const { first_name, last_name, year_id, major_id } = req.body
   const user = await addUser(first_name, last_name, year_id, major_id)
   res.status(201).send(user)
 })
 
+/*  =============== courses  =============== */
 
-// Auth routes
+// get all courses
+router.get("/courses", async (req, res) => {
+    const courses = await getCourses()
+    res.send(courses)
+})
+
+/*  =============== schedule entries =============== */
+
+// get schedule entries by user id
+router.get("/schedule-entries/:user_id", async(req, res) => {
+    const user_id = req.params.user_id
+    const user = await getScheduleEntries(user_id)
+    res.send(user)
+  })
+
+// add schedule entry
+router.post("/schedule-entries", async (req, res) => {
+    const { user_id, course_id, year_name, quarter_name } = req.body
+    const schedule_entry = await addScheduleEntry(user_id, course_id, year_name, quarter_name)
+    res.status(201).send(schedule_entry)
+})
+
+// delete schedule entry
+router.post("/schedule-entries/update", async (req, res) => {
+    const { id, quarter } = req.body
+    const result = await updateScheduleEntry(id, quarter)
+    res.status(200).send(result)
+})
 
 // check if user logged in
 const isLoggedIn = (req, res, next) => {
@@ -72,4 +99,4 @@ authRouter.get('/user', (req, res) => {
   }
 });
 
-export { apiRouter, authRouter }
+export { router, authRouter }

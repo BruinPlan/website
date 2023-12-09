@@ -1,0 +1,68 @@
+.open-add-course-modal-btn{
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    margin: 0.25rem auto;
+    transition: 0.3s;
+    font-size: 0.85rem;
+}
+
+.open-add-course-modal-btn:hover {
+    background-color: var(--darker-blue);
+    cursor: pointer;
+    transform: scale(1.1);
+    font-size: 0.935rem;
+}
+
+.add-course-modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40%;
+    height: 60%;
+    background-color: white;
+    box-shadow: 24px;
+    padding: 1rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.add-course-modal-box h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.add-course-modal-box p {
+    text-align: center;
+}
+
+.add-course-modal-divider {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 2rem;
+    flex: 1;
+}
+
+.add-course-btn {
+    width: 5rem;
+    padding: 0.2rem 1.5rem;
+    background-color: var(--blue);
+    color: white;
+    border-radius: 2rem;
+    border: 0;
+    box-shadow: none;
+    transition: 0.25s ease;
+    margin: auto;
+    cursor: pointer;
+}
+
+.add-course-btn:hover {
+    transform: scale(1.1);
+}

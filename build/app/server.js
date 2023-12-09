@@ -16,6 +16,11 @@ class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.app.use(express_1.default.json());
+        const corsOptions = {
+            optionsSuccessStatus: 200,
+            credentials: true,
+        };
+        this.app.use((0, cors_1.default)(corsOptions));
         // enable cors
         this.app.use((req, res, next) => {
             res.header('Access-Control-Allow-Origin', '*');
@@ -35,14 +40,17 @@ class Server {
             // }),
             resave: false, // Set to false to avoid unnecessary session saves
             saveUninitialized: false, // Set to false to avoid storing uninitialized sessions
-            cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day
+            cookie: {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60
+            }, // 1 hour
         }));
         // Passport middleware
         this.app.use(passport_1.default.initialize());
         this.app.use(passport_1.default.session());
         // this.app.use(cors({ origin: 'http://127.0.0.1:3000', methods: "GET,POST,PUT,DELETE", credentials: true }))
         // api
-        this.app.use('/api', router_js_1.apiRouter);
+        this.app.use('/api', router_js_1.router);
         this.app.use('/auth', router_js_1.authRouter);
         // handle errors
         this.app.use((err, req, res, next) => {

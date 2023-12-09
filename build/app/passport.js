@@ -24,10 +24,11 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
 }, (accessToken, refreshToken, profile, cb) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('Authenticating user');
     try {
+        console.log(profile);
         const user = yield (0, db_js_1.getUser)(profile.id);
         // If new user, create new user
         if (!user) {
-            const newUser = yield yield (0, db_js_1.addUser)(profile.name.givenName, profile.name.familyName, 1, 1, profile.id);
+            const newUser = yield (0, db_js_1.addUser)(profile.name.givenName, profile.name.familyName, 1, 1, profile.id);
             console.log(`User ${profile.id} created`);
             return cb(null, newUser);
         }

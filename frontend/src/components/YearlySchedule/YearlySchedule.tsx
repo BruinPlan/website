@@ -1,15 +1,47 @@
 import React, { useState, useEffect } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { scheduleData } from './YearlyScheduleData'
+import { loadScheduleData, fullCourseList, YearlyScheduleDataType } from './YearlyScheduleData'
+import { postData } from '../../apiUtils'
 import Column from '../Column/Column'
 import './YearlySchedule.css'
 
-function YearlySchedule() {
-    const [schedule, setSchedule] = useState(scheduleData);
+type YearlySchedulePropsType = {
+    year: string
+}
 
-    // updates columns once a class has been dragged
-    const onDragEnd = (result: any) => {
-        console.log(typeof result)
+function YearlySchedule(props: YearlySchedulePropsType) {
+    const [schedule, setSchedule] = useState<YearlyScheduleDataType>()
+    const [userId, setUserId] = useState<string>("")
+
+    useEffect(() => {
+        fetch("/auth/user", { credentials: "include" }).then((res) => {
+        if (res.ok) {
+            return res.json()
+        } else {
+            console.log("User is not logged in")
+        }
+        }).then((data) => {setUserId(data.id)
+            return data.id
+        }
+        ).then((userId) => {
+        loadScheduleData(userId).then((data) => {
+            setSchedule(data[props.year]);
+        })})
+        console.log('yearly schedule rendered')
+
+    }, [props.year]);
+
+    async function reloadSchedule() {
+        console.log('reloading schedule', userId)
+        const newScheduleData = await loadScheduleData(userId)
+        setSchedule(newScheduleData[props.year])
+    }
+
+    // updates columns once a course has been dragged
+    const onDragEnd = async (result: any) => {
+        if (!schedule) {
+            return
+        }
         const { destination, source, draggableId } = result
 
         if (!destination) {
@@ -21,21 +53,21 @@ function YearlySchedule() {
                 return
         }
 
-        /* create new class ID array with new ordering after drag and drop*/
+        /* create new course ID array with new ordering after drag and drop*/
 
         // get source and destination quarters
         const start = schedule.columns[source.droppableId]
         const finish = schedule.columns[destination.droppableId]
 
-        // if class is dragged within the same quarter
+        // if course is dragged within the same quarter
         if (start === finish) {
-            const newClassIds = Array.from(start.classIds)
-            newClassIds.splice(source.index, 1)
-            newClassIds.splice(destination.index, 0, draggableId)
+            const newCourseIds = Array.from(start.courseIds)
+            newCourseIds.splice(source.index, 1)
+            newCourseIds.splice(destination.index, 0, draggableId)
 
             const newColumn = {
                 ...start,
-                classIds: newClassIds
+                courseIds: newCourseIds
             }
 
             const newSchedule = {
@@ -50,19 +82,19 @@ function YearlySchedule() {
             return
         }
         
-        // class is dragged to different quarter
-        const startClassIds = Array.from(start.classIds)
-        startClassIds.splice(source.index, 1)
+        // course is dragged to different quarter
+        const startCourseIds = Array.from(start.courseIds)
+        const deletedCourseId = startCourseIds.splice(source.index, 1)[0]
         const newStart = {
             ...start,
-            classIds: startClassIds
+            courseIds: startCourseIds
         }
 
-        const finishClassIds = Array.from(finish.classIds)
-        finishClassIds.splice(destination.index, 0, draggableId)
+        const finishCourseIds = Array.from(finish.courseIds)
+        finishCourseIds.splice(destination.index, 0, draggableId)
         const newFinish = {
             ...finish,
-            classIds: finishClassIds
+            courseIds: finishCourseIds
         }
 
         const newSchedule = {
@@ -75,14 +107,21 @@ function YearlySchedule() {
         }
 
         setSchedule(newSchedule)
+
+        // update db
+        const deletedCourse = schedule.courses[deletedCourseId]
+        const scheduleEntryBody = {
+            id: deletedCourse.entryId,
+            quarter: newFinish.id
+        }
+        await postData("http://127.0.0.1:3000/api/schedule-entries/update", scheduleEntryBody)
+        await reloadSchedule()
     }
 
-    useEffect(() => {
-        fetch(`http://127.0.0.1:3000/api/users`)
-            .then(response =>response.json())
-            .then(data => console.log(data))
-    }, [])
-
+    if (!schedule) {
+        return <></>
+    }
+   
     return (
         <div className="yearly-schedule">
             <DragDropContext onDragEnd={onDragEnd} >
@@ -90,9 +129,9 @@ function YearlySchedule() {
                     { 
                         schedule.columnOrder.map(columnId => {
                             const column = schedule.columns[columnId];
-                            const classes = column.classIds.map(classId => schedule.classes[classId]);
+                            const courses = column.courseIds.map(courseId => schedule.courses[courseId]);
 
-                            return <Column key={column.id} column={column} classes={classes} />
+                            return <Column key={column.id} column={column} courses={courses} fullCourseList={fullCourseList} year={props.year} schedule={schedule} reloadSchedule={reloadSchedule}  />
                         })
                     }
                 </div>
