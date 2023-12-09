@@ -94,8 +94,4 @@ const courseMap: CourseMapType = fullCourseList.reduce((acc: CourseMapType, item
     return acc
 }, {})
 
-// let scheduleData: ScheduleDataType = {}
-// scheduleData = await loadScheduleData('1')
-
-
 export { type CourseDataType, type ColumnDataType, type YearlyScheduleDataType, fullCourseList, loadScheduleData, classIsInYearlySchedule }

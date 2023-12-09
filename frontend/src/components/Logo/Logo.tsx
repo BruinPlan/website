@@ -1,9 +1,10 @@
 import React from 'react'
+import logo from '../../logo.png'
 import './Logo.css'
 
 function Logo() {
     return (
-        <h1 className="logo">logo</h1>
+        <img src={logo} alt="logo" className="logo" />
     )
 }
 

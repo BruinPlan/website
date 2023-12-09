@@ -1,59 +1,48 @@
-import { useGoogleLogin } from "@react-oauth/google"
-import { googleLogout } from "@react-oauth/google"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import "./Login.css"
 
+// function setToken(userToken: string) {
+//   sessionStorage.setItem('token', JSON.stringify(userToken));
+// }
+
+// function getToken() {
+//   const tokenString = sessionStorage.getItem('token');
+//   const userToken = JSON.parse(tokenString ?? '{}');
+//   return userToken?.token 
+// }
+
 function Login() {
-    const [isLogged, setIsLogged] = useState(false)
-    const login = useGoogleLogin({
-        onSuccess: async (response) => {
-            try {
-                const res = await fetch(
-                    "https://www.googleapis.com/oauth2/v3/userinfo",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${response.access_token}`,
-                        },
-                    }
-                )
-                const data = await res.json()
-                console.log(data)
-                setIsLogged(true)
-            } catch (err) {
-                console.log(err)
-            }
-        },
+  const [isLogged, setIsLogged] = useState(false)
+
+  useEffect(() => {
+    fetch("/auth/user", { credentials: "include" }).then((res) => {
+      res.ok ? setIsLogged(true) : setIsLogged(false)
     })
+    // const checkAuthenticationStatus = () => {
+    //   fetch("/auth/user", { credentials: "include" }).then((res) => {
+    //     res.ok ? setIsLogged(true) : setIsLogged(false)
+    //   })
+    // }
+    // checkAuthenticationStatus()
+  }, [])
+  
+  const handleLogin = () => {
+    window.open("http://127.0.0.1:3000/auth/google", "_self");
+  }
+  
+  const handleLogout = () => {
+    window.open("http://127.0.0.1:3000/auth/logout", "_self");
+}
 
-    const logout = () => {
-        googleLogout()
-        setIsLogged(false)
-        console.log("Logged out")
-    }
-
-    return (
-        <>
-            {isLogged ? (
-                <button
-                    className="logout"
-                    onClick={() => {
-                        logout()
-                    }}
-                >
-                    Logout
-                </button>
-            ) : (
-                <button
-                    className="login"
-                    onClick={() => {
-                        login()
-                    }}
-                >
-                    Login
-                </button>
-            )}
-        </>
-    )
+  return (
+    <>
+      {isLogged ? (
+        <button className="logout" onClick={handleLogout}>Logout</button>
+      ) : (
+        <button className="login" onClick={handleLogin}>Login</button>
+      )}
+    </>
+  );
 }
 
 export default Login

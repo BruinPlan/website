@@ -1,7 +1,9 @@
 import express from 'express'
 import { getUsers, getUser, addUser , getCourses, getScheduleEntries, addScheduleEntry, updateScheduleEntry } from './db.js'
+import passport from 'passport'
 
 const router = express.Router()
+const authRouter = express.Router()
 
 /* =============== users =============== */
 
@@ -56,4 +58,45 @@ router.post("/schedule-entries/update", async (req, res) => {
     res.status(200).send(result)
 })
 
-export default router
+// check if user logged in
+const isLoggedIn = (req, res, next) => {
+  req.user ? next() : res.sendStatus(401)
+}
+
+// authenticate user
+authRouter.get("/google", 
+  passport.authenticate('google', { scope: ['profile', 'email'] }))
+
+// callback route for google to redirect to
+authRouter.get("/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
+    console.log(req.user)
+    res.redirect("/");
+  }
+);
+
+authRouter.get("/failure", (req, res) => {
+  console.log(req.user)
+  console.log("Login failed")
+  res.send("Login failed")
+})
+
+// logout user
+authRouter.get("/logout", (req, res) => {
+  console.log('Logging out user')
+  req.logout(function(err) {
+    if (err) { return next(err) }
+    res.redirect('/');
+  });
+})
+
+authRouter.get('/user', (req, res) => {
+  if (req.user) {
+    res.json(req.user); // Return user data
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+});
+
+export { router, authRouter }

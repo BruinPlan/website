@@ -11,13 +11,29 @@ type YearlySchedulePropsType = {
 
 function YearlySchedule(props: YearlySchedulePropsType) {
     const [schedule, setSchedule] = useState<YearlyScheduleDataType>()
+    const [userId, setUserId] = useState<string>("")
 
     useEffect(() => {
-        loadScheduleData('1').then(data => setSchedule(data[props.year]))
-    }, [props.year])
+        fetch("/auth/user", { credentials: "include" }).then((res) => {
+        if (res.ok) {
+            return res.json()
+        } else {
+            console.log("User is not logged in")
+        }
+        }).then((data) => {setUserId(data.id)
+            return data.id
+        }
+        ).then((userId) => {
+        loadScheduleData(userId).then((data) => {
+            setSchedule(data[props.year]);
+        })})
+        console.log('yearly schedule rendered')
+
+    }, [props.year]);
 
     async function reloadSchedule() {
-        const newScheduleData = await loadScheduleData('1')
+        console.log('reloading schedule', userId)
+        const newScheduleData = await loadScheduleData(userId)
         setSchedule(newScheduleData[props.year])
     }
 

@@ -7,6 +7,7 @@ import { CourseDataType, YearlyScheduleDataType, classIsInYearlySchedule } from 
 import { SelectChangeEvent } from "@mui/material/Select";
 import { postData } from '../../apiUtils'
 import "./AddCourseModal.css"
+import { useState, useEffect } from "react";
 
 type AddCourseModalProps = {
     fullCourseList: CourseDataType[],
@@ -21,6 +22,7 @@ function AddCourseModal(props: AddCourseModalProps) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [selectedCourseId, setSelectedCourseId] = React.useState("")
+    const [userId, setUserId] = useState<string>("")
 
     const courseIdsAndNames = props.fullCourseList.map(course => {
         return {
@@ -28,6 +30,18 @@ function AddCourseModal(props: AddCourseModalProps) {
             title: course.title
         }    
     })
+
+    useEffect(() => {
+        fetch("/auth/user", { credentials: "include" }).then((res) => {
+        if (res.ok) {
+            return res.json()
+        } else {
+            console.log("User is not logged in")
+        }
+        }).then((data) => {setUserId(data.id)
+            return data.id
+        }
+        )})
 
     // handle when class dropdown changes
     function handleDropdownChange(e: SelectChangeEvent) {
@@ -45,7 +59,7 @@ function AddCourseModal(props: AddCourseModalProps) {
 
         // update db and reload schedule
         const scheduleEntryBody = {
-            user_id: 1,
+            user_id: userId,
             course_id: selectedCourseId,
             year_name: props.year,
             quarter_name: props.quarter
