@@ -33,10 +33,10 @@ async (accessToken, refreshToken, profile, cb) => {
 
 // Serialize user by google_id
 passport.serializeUser((user, done) => {
-  done(null, user.google_id);
+  done(null, user.google_id)
 });
 
 // Deserialize user by google_id
 passport.deserializeUser((google_id, done) => {
-  getUser(google_id).then(user => done(null, user));
+  getUser(google_id).then(user => done(null, user))
 });

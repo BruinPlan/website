@@ -39,9 +39,14 @@ async function getUser(id) {
 
 // insert new user
 async function addUser(first_name, last_name, year_id, major_id, google_id) {
-    if (!first_name || !last_name || !year_id || !major_id || !google_id) {
-        return -1
-    }
+    if (!first_name)
+        first_name = ''
+    if (!last_name) 
+        last_name = ''
+
+    // if (!first_name || !last_name || !year_id || !major_id || !google_id) {
+    //     return -1
+    // }
 
     const insertId = await queryInsert("INSERT INTO users (first_name, last_name, year_id, major_id, google_id) VALUES (?, ?, ?, ?, ?)", 
         [first_name, last_name, year_id, major_id, google_id])
