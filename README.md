@@ -15,19 +15,34 @@
    git clone https://github.com/BruinPlan/website.git
    cd website
    ```
-
+2. Modify the `move` command in `"scripts"` in `frontend/package.json` depending on your Operating System:
+   
+      - Windows:
+      ```json
+      "scripts": {
+         ...
+        "build": "react-scripts build && move ./build ../build/frontend",
+        ...
+      ```
+      - Mac/Linux:
+      ```json
+      "scripts": {
+         ...
+         "build": "react-scripts build && mv ./build ../build/frontend",
+         ...
+      ```
 2. Install dependencies and build the Node.js app:
-
-   ```bash
-   npm install
-   npm run build
-   ```
-   Install dependencies for the React app and build it:
-   ```bash
-   cd frontend
-   npm install --legacy-peer-deps
-   npm run build
-   ```
+   - In the root directory:
+      ```bash
+      npm install
+      npm run build
+      ```
+   - Install dependencies for the React app and build it:
+      ```bash
+      cd frontend
+      npm install --legacy-peer-deps
+      npm run build
+      ```
 
 3. Set up the MySQL database:
 
@@ -45,7 +60,7 @@
      VITE_CLIENT_ID="664712804310-jqok8vvq8as7l3o8o7r5nesehc7cknvs.apps.googleusercontent.com"
      GOOGLE_CLIENT_ID="664712804310-jqok8vvq8as7l3o8o7r5nesehc7cknvs.apps.googleusercontent.com"
      GOOGLE_CLIENT_SECRET="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"
-     DB_HOST='127.0.0.1'
+     DB_HOST=your_db_host
      DB_USER=your_mysql_username
      DB_PASS=your_mysql_password
      DB_NAME='bplan'
