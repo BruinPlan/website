@@ -57,7 +57,6 @@
    - Add the following environment variables to the `.env` file:
 
      ```sh
-     VITE_CLIENT_ID="664712804310-jqok8vvq8as7l3o8o7r5nesehc7cknvs.apps.googleusercontent.com"
      GOOGLE_CLIENT_ID="664712804310-jqok8vvq8as7l3o8o7r5nesehc7cknvs.apps.googleusercontent.com"
      GOOGLE_CLIENT_SECRET="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"
      DB_HOST=your_db_host
