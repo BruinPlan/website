@@ -43,11 +43,9 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
 })));
 // Serialize user by google_id
 passport_1.default.serializeUser((user, done) => {
-    console.log(user);
     done(null, user.google_id);
 });
 // Deserialize user by google_id
 passport_1.default.deserializeUser((google_id, done) => {
-    console.log(google_id);
     (0, db_js_1.getUser)(google_id).then(user => done(null, user));
 });

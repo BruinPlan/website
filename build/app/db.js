@@ -58,15 +58,13 @@ exports.getUser = getUser;
 // insert new user
 function addUser(first_name, last_name, year_id, major_id, google_id) {
     return __awaiter(this, void 0, void 0, function* () {
-        // if (!first_name)
-        //     first_name = ''
-        if (!last_name) {
+        if (!first_name)
+            first_name = '';
+        if (!last_name)
             last_name = '';
-            console.log(last_name);
-        }
-        if (!first_name || !year_id || !major_id || !google_id) {
-            return -1;
-        }
+        // if (!first_name || !last_name || !year_id || !major_id || !google_id) {
+        //     return -1
+        // }
         const insertId = yield queryInsert("INSERT INTO users (first_name, last_name, year_id, major_id, google_id) VALUES (?, ?, ?, ?, ?)", [first_name, last_name, year_id, major_id, google_id]);
         return getUser(insertId);
     });
