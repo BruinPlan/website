@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { scheduleData, loadScheduleData, fullCourseList } from './YearlyScheduleData'
+import { loadScheduleData, fullCourseList, YearlyScheduleDataType } from './YearlyScheduleData'
+import { postData } from '../../apiUtils'
 import Column from '../Column/Column'
 import './YearlySchedule.css'
 
@@ -9,10 +10,22 @@ type YearlySchedulePropsType = {
 }
 
 function YearlySchedule(props: YearlySchedulePropsType) {
-    const [schedule, setSchedule] = useState(scheduleData[props.year])
+    const [schedule, setSchedule] = useState<YearlyScheduleDataType>()
+
+    useEffect(() => {
+        loadScheduleData('1').then(data => setSchedule(data[props.year]))
+    }, [props.year])
+
+    async function reloadSchedule() {
+        const newScheduleData = await loadScheduleData('1')
+        setSchedule(newScheduleData[props.year])
+    }
 
     // updates columns once a course has been dragged
-    const onDragEnd = (result: any) => {
+    const onDragEnd = async (result: any) => {
+        if (!schedule) {
+            return
+        }
         const { destination, source, draggableId } = result
 
         if (!destination) {
@@ -55,7 +68,7 @@ function YearlySchedule(props: YearlySchedulePropsType) {
         
         // course is dragged to different quarter
         const startCourseIds = Array.from(start.courseIds)
-        startCourseIds.splice(source.index, 1)
+        const deletedCourseId = startCourseIds.splice(source.index, 1)[0]
         const newStart = {
             ...start,
             courseIds: startCourseIds
@@ -78,11 +91,19 @@ function YearlySchedule(props: YearlySchedulePropsType) {
         }
 
         setSchedule(newSchedule)
+
+        // update db
+        const deletedCourse = schedule.courses[deletedCourseId]
+        const scheduleEntryBody = {
+            id: deletedCourse.entryId,
+            quarter: newFinish.id
+        }
+        await postData("http://127.0.0.1:3000/api/schedule-entries/update", scheduleEntryBody)
+        await reloadSchedule()
     }
 
-    async function reloadSchedule() {
-        const newScheduleData = await loadScheduleData('1')
-        setSchedule(newScheduleData[props.year])
+    if (!schedule) {
+        return <></>
     }
    
     return (
@@ -94,7 +115,7 @@ function YearlySchedule(props: YearlySchedulePropsType) {
                             const column = schedule.columns[columnId];
                             const courses = column.courseIds.map(courseId => schedule.courses[courseId]);
 
-                            return <Column key={column.id} column={column} courses={courses} fullCourseList={fullCourseList} year={props.year} reloadSchedule={reloadSchedule}  />
+                            return <Column key={column.id} column={column} courses={courses} fullCourseList={fullCourseList} year={props.year} schedule={schedule} reloadSchedule={reloadSchedule}  />
                         })
                     }
                 </div>

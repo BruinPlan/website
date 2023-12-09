@@ -9,9 +9,6 @@ function Navbar() {
             <div className="nav-container">
                 <Logo />
                 <div className="nav-panel">
-                    <a className="notes" href="#">
-                        Notes
-                    </a>
                     <Login />
                 </div>
             </div>

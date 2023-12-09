@@ -1,5 +1,5 @@
 import React from 'react'
-import { CourseDataType, ColumnDataType } from '../YearlySchedule/YearlyScheduleData'
+import { CourseDataType, ColumnDataType, YearlyScheduleDataType } from '../YearlySchedule/YearlyScheduleData'
 import Course from '../Course/Course'
 import AddCourseModal from '../AddCourseModal/AddCourseModal'
 import { Droppable } from 'react-beautiful-dnd'
@@ -11,6 +11,7 @@ type ColumnProps = {
     courses: CourseDataType[],
     fullCourseList: CourseDataType[],
     year: string,
+    schedule: YearlyScheduleDataType
     reloadSchedule: () => void
 }
 
@@ -34,7 +35,7 @@ function Column(props: ColumnProps) {
                 )}
             </Droppable>
 
-            <AddCourseModal fullCourseList={props.fullCourseList} year={props.year} quarter={props.column.id} reloadSchedule={props.reloadSchedule} />
+            <AddCourseModal fullCourseList={props.fullCourseList} year={props.year} quarter={props.column.id} schedule={props.schedule} reloadSchedule={props.reloadSchedule} />
 
         </div>
     )

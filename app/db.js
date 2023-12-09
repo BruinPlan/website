@@ -17,6 +17,12 @@ async function queryInsert(query, params=[]) {
     return result.insertId
 }
 
+// update statement (create)
+async function queryUpdate(query, params=[]) {
+    const [result] = await pool.query(query, params)
+    return result.affectedRows
+}
+
 /* =============== users =============== */
 
 // get all users
@@ -68,7 +74,7 @@ async function getScheduleEntries(user_id) {
 // get schedule entry by id
 async function getScheduleEntry(id) {
     const scheduleEntry = await querySelect("SELECT * FROM schedule_entries WHERE id = ?", [id])
-    return scheduleEntry
+    return scheduleEntry[0]
 }
 
 // insert new schedule entry
@@ -86,4 +92,19 @@ async function addScheduleEntry(user_id, course_id, year_name, quarter_name) {
     return getScheduleEntry(insertId)
 }
 
-export { getUsers, getUser, addUser, getCourses, getScheduleEntries, addScheduleEntry }
+// update schedule entry
+async function updateScheduleEntry(id, quarter) {
+    if (!id || !quarter) {
+        return -1
+    }
+
+    const affectedRows = await queryUpdate(`UPDATE schedule_entries SET quarter_id = 
+                                        (SELECT id FROM quarters WHERE quarters.name = ?)
+                                        WHERE id = ?`, [quarter, id])
+    if (!affectedRows) {
+        return -1
+    }
+    return getScheduleEntry(id)
+}
+
+export { getUsers, getUser, addUser, getCourses, getScheduleEntries, addScheduleEntry, updateScheduleEntry }

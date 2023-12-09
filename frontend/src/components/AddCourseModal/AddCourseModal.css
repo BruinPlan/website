@@ -1,4 +1,4 @@
-.open-course-modal-btn{
+.open-add-course-modal-btn{
     width: 2rem;
     height: 2rem;
     background-color: var(--blue);
@@ -10,14 +10,14 @@
     font-size: 0.85rem;
 }
 
-.open-course-modal-btn:hover {
+.open-add-course-modal-btn:hover {
     background-color: var(--darker-blue);
     cursor: pointer;
     transform: scale(1.1);
     font-size: 0.935rem;
 }
 
-.course-modal-box {
+.add-course-modal-box {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -32,12 +32,17 @@
     flex-direction: column;
 }
 
-.course-modal-box h2 {
+.add-course-modal-box h2 {
     font-size: 1.5rem;
     font-weight: 600;
+    text-align: center;
 }
 
-.course-modal-divider {
+.add-course-modal-box p {
+    text-align: center;
+}
+
+.add-course-modal-divider {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
