@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addScheduleEntry = exports.getScheduleEntries = exports.getCourses = exports.addUser = exports.getUser = exports.getUsers = void 0;
+exports.updateScheduleEntry = exports.addScheduleEntry = exports.getScheduleEntries = exports.getCourses = exports.addUser = exports.getUser = exports.getUsers = void 0;
 const mysql2_1 = __importDefault(require("mysql2"));
 const config_js_1 = __importDefault(require("./config.js"));
 const pool = mysql2_1.default.createPool(config_js_1.default.db).promise();
@@ -29,6 +29,13 @@ function queryInsert(query, params = []) {
     return __awaiter(this, void 0, void 0, function* () {
         const [result] = yield pool.query(query, params);
         return result.insertId;
+    });
+}
+// update statement (create)
+function queryUpdate(query, params = []) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const [result] = yield pool.query(query, params);
+        return result.affectedRows;
     });
 }
 /* =============== users =============== */
@@ -87,7 +94,7 @@ exports.getScheduleEntries = getScheduleEntries;
 function getScheduleEntry(id) {
     return __awaiter(this, void 0, void 0, function* () {
         const scheduleEntry = yield querySelect("SELECT * FROM schedule_entries WHERE id = ?", [id]);
-        return scheduleEntry;
+        return scheduleEntry[0];
     });
 }
 // insert new schedule entry
@@ -104,3 +111,19 @@ function addScheduleEntry(user_id, course_id, year_name, quarter_name) {
     });
 }
 exports.addScheduleEntry = addScheduleEntry;
+// update schedule entry
+function updateScheduleEntry(id, quarter) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!id || !quarter) {
+            return -1;
+        }
+        const affectedRows = yield queryUpdate(`UPDATE schedule_entries SET quarter_id = 
+                                        (SELECT id FROM quarters WHERE quarters.name = ?)
+                                        WHERE id = ?`, [quarter, id]);
+        if (!affectedRows) {
+            return -1;
+        }
+        return getScheduleEntry(id);
+    });
+}
+exports.updateScheduleEntry = updateScheduleEntry;

@@ -3,15 +3,16 @@ import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Modal from "@mui/material/Modal"
 import CourseDropdown from "../CourseDropdown/CourseDropdown"
-import { CourseDataType, classIsInYearlySchedule } from '../YearlySchedule/YearlyScheduleData'
+import { CourseDataType, YearlyScheduleDataType, classIsInYearlySchedule } from '../YearlySchedule/YearlyScheduleData'
 import { SelectChangeEvent } from "@mui/material/Select";
-import { postData } from '../../utils'
+import { postData } from '../../apiUtils'
 import "./AddCourseModal.css"
 
 type AddCourseModalProps = {
     fullCourseList: CourseDataType[],
     year: string,
     quarter: string,
+    schedule: YearlyScheduleDataType,
     reloadSchedule: () => void
 }
 
@@ -37,7 +38,7 @@ function AddCourseModal(props: AddCourseModalProps) {
     async function handleClick() {
 
         // if course is already in schedule, abort
-        if (classIsInYearlySchedule(selectedCourseId, props.year)) {
+        if (classIsInYearlySchedule(props.schedule, selectedCourseId)) {
             alert("Course is already in schedule")
             return
         }
@@ -51,7 +52,7 @@ function AddCourseModal(props: AddCourseModalProps) {
         }
 
         await postData("http://127.0.0.1:3000/api/schedule-entries", scheduleEntryBody)
-        props.reloadSchedule()
+        await props.reloadSchedule()
 
         // close modal
         handleClose()
@@ -59,14 +60,14 @@ function AddCourseModal(props: AddCourseModalProps) {
 
     return (
         <>
-            <button className="open-course-modal-btn" onClick={handleOpen}>+</button>
+            <button className="open-add-course-modal-btn" onClick={handleOpen}>+</button>
             <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box className="course-modal-box">
+                <Box className="add-course-modal-box">
                     <Typography
                         id="modal-modal-title"
                         variant="h5"
@@ -75,10 +76,9 @@ function AddCourseModal(props: AddCourseModalProps) {
                         Add a course
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Add a course to your schedule by selecting the subject
-                        area and course number.
+                        Add a course to your schedule.
                     </Typography>
-                    <div className="course-modal-divider">
+                    <div className="add-course-modal-divider">
                         <CourseDropdown labelText="Title" options={courseIdsAndNames} onChange={handleDropdownChange}/>
                     </div>
                     <button className="add-course-btn" onClick={handleClick}>
@@ -90,4 +90,4 @@ function AddCourseModal(props: AddCourseModalProps) {
     );
 }
 
-export default AddCourseModal;
+export default AddCourseModal

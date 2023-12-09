@@ -1,5 +1,5 @@
 import express from 'express'
-import { getUsers, getUser, addUser , getCourses, getScheduleEntries, addScheduleEntry } from './db.js'
+import { getUsers, getUser, addUser , getCourses, getScheduleEntries, addScheduleEntry, updateScheduleEntry } from './db.js'
 
 const router = express.Router()
 
@@ -47,6 +47,13 @@ router.post("/schedule-entries", async (req, res) => {
     const { user_id, course_id, year_name, quarter_name } = req.body
     const schedule_entry = await addScheduleEntry(user_id, course_id, year_name, quarter_name)
     res.status(201).send(schedule_entry)
+})
+
+// delete schedule entry
+router.post("/schedule-entries/update", async (req, res) => {
+    const { id, quarter } = req.body
+    const result = await updateScheduleEntry(id, quarter)
+    res.status(200).send(result)
 })
 
 export default router

@@ -52,4 +52,10 @@ router.post("/schedule-entries", (req, res) => __awaiter(void 0, void 0, void 0,
     const schedule_entry = yield (0, db_js_1.addScheduleEntry)(user_id, course_id, year_name, quarter_name);
     res.status(201).send(schedule_entry);
 }));
+// delete schedule entry
+router.post("/schedule-entries/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, quarter } = req.body;
+    const result = yield (0, db_js_1.updateScheduleEntry)(id, quarter);
+    res.status(200).send(result);
+}));
 exports.default = router;
