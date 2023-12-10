@@ -78,4 +78,4 @@ Start the Node.js app in the root project directory:
 
 - Visit `http://127.0.0.1:3000` in your browser to view the React app.
 - Login with Google to access the protected route.
-- May need to log in twice to access your schedule
+- Will need to log in twice (with the same account) to access your schedule
