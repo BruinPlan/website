@@ -49,8 +49,6 @@ export class Server {
     this.app.use(passport.initialize())
     this.app.use(passport.session())
 
-    // this.app.use(cors({ origin: 'http://127.0.0.1:3000', methods: "GET,POST,PUT,DELETE", credentials: true }))
-
     // api
     this.app.use('/api', router)
     this.app.use('/auth', authRouter)

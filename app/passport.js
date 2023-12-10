@@ -10,19 +10,16 @@ passport.use(new GoogleStrategy({
   scope: ['profile', 'email'],
 },
 async (accessToken, refreshToken, profile, cb) => {
-  console.log('Authenticating user')
   try {
-    console.log(profile)
     const user = await getUser(profile.id)
+    
     // If new user, create new user
     if (!user) {
       const newUser = await addUser(profile.name.givenName, profile.name.familyName, 1, 1, profile.id)
-      console.log(`User ${profile.id} created`)
       return cb(null, newUser)
     }
 
     // If previously logged in, fetch user
-    console.log(`User ${profile.id} found`)
     return cb(null, user) // Returns user, accessible by req.session.passport.user
   
   } catch (err) {

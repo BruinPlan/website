@@ -71,20 +71,16 @@ authRouter.get("/google",
 authRouter.get("/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    console.log(req.user)
     res.redirect("/");
   }
 );
 
 authRouter.get("/failure", (req, res) => {
-  console.log(req.user)
-  console.log("Login failed")
   res.send("Login failed")
 })
 
 // logout user
 authRouter.get("/logout", (req, res) => {
-  console.log('Logging out user')
   req.logout(function(err) {
     if (err) { return next(err) }
     res.redirect('/');

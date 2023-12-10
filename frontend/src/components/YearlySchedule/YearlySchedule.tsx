@@ -15,24 +15,18 @@ function YearlySchedule(props: YearlySchedulePropsType) {
 
     useEffect(() => {
         fetch("/auth/user", { credentials: "include" }).then((res) => {
-        if (res.ok) {
+        if (res.ok)
             return res.json()
-        } else {
-            console.log("User is not logged in")
-        }
         }).then((data) => {setUserId(data.id)
             return data.id
         }
         ).then((userId) => {
-        loadScheduleData(userId).then((data) => {
-            setSchedule(data[props.year]);
+            loadScheduleData(userId).then((data) => {
+                setSchedule(data[props.year]);
         })})
-        console.log('yearly schedule rendered')
-
     }, [props.year]);
 
     async function reloadSchedule() {
-        console.log('reloading schedule', userId)
         const newScheduleData = await loadScheduleData(userId)
         setSchedule(newScheduleData[props.year])
     }

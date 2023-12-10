@@ -18,12 +18,6 @@ function Login() {
     fetch("/auth/user", { credentials: "include" }).then((res) => {
       res.ok ? setIsLogged(true) : setIsLogged(false)
     })
-    // const checkAuthenticationStatus = () => {
-    //   fetch("/auth/user", { credentials: "include" }).then((res) => {
-    //     res.ok ? setIsLogged(true) : setIsLogged(false)
-    //   })
-    // }
-    // checkAuthenticationStatus()
   }, [])
   
   const handleLogin = () => {
